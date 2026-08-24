@@ -665,3 +665,143 @@ html.theme-anim *::after {
 .mode-onsite {
   --mode-ink: var(--color-sky-ink);
 }
+
+/* ============================================================
+   LIGHTBOX (project pages) — click an image to see it full size
+   ------------------------------------------------------------
+   The overlay markup is built by app.js, so the affordance only
+   appears when the viewer can actually open.
+   ============================================================ */
+
+.zoomable {
+  cursor: zoom-in;
+  transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.zoomable:hover {
+  box-shadow: 0 0 0 2px var(--color-lime);
+}
+
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  /* solid: a translucent field lets high-contrast page text ghost
+     through, and a full-screen backdrop-filter is costly on phones */
+  background: #0a0a0c;
+  color: #f1f0ed;
+  opacity: 0;
+  transition: opacity 0.26s ease;
+}
+.lb.is-open {
+  opacity: 1;
+}
+
+.lb-bar,
+.lb-foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(0.75rem, 3vw, 1.75rem);
+}
+.lb-bar {
+  justify-content: space-between;
+}
+.lb-foot {
+  justify-content: center;
+}
+.lb-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.lb-count {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+.lb-cap {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.lb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.4rem;
+  padding-inline: 0.9rem;
+  border-radius: 999px;
+  background: rgb(241 240 237 / 0.1);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color 0.28s ease,
+    color 0.28s ease;
+}
+.lb-btn:hover {
+  background: var(--color-lime);
+  color: var(--color-on-lime);
+}
+.lb-icon {
+  width: 2.4rem;
+  padding-inline: 0;
+}
+.lb-btn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.lb-btn[hidden] {
+  display: none;
+}
+
+/* the scroll container: `margin: auto` centres the image while it fits
+   and resolves to 0 once it overflows, so nothing gets clipped at 1:1 */
+.lb-stage {
+  display: flex;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding-inline: clamp(0.5rem, 3vw, 2rem);
+  touch-action: pan-x pan-y;
+}
+.lb-frame {
+  margin: auto;
+}
+.lb-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 9rem);
+  border-radius: 8px;
+  cursor: zoom-in;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+.lb.is-loading .lb-img {
+  opacity: 0;
+}
+
+/* 1:1 — real pixels, dragged or scrolled around */
+.lb-stage.is-actual .lb-img {
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  cursor: grab;
+}
+.lb-stage.is-actual.is-panning .lb-img {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb,
+  .lb-img,
+  .zoomable {
+    transition: none;
+  }
+}

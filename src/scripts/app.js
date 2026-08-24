@@ -13,6 +13,7 @@
  *   data-cover            → big cover image clip reveal on page load
  *   .magnetic             → element gently sticks to the cursor
  *   .gate-mi              → masked line revealed by the load timeline
+ *   data-zoom             → images inside open full size in the lightbox
  */
 
 import gsap from 'gsap';
@@ -168,6 +169,7 @@ function initPage() {
   initAnchors(signal);
   initScrollToggle(signal);
   initTheme(signal);
+  initLightbox(signal);
 
   if (reduced) {
     html.classList.add('booted');
@@ -484,4 +486,249 @@ function initClock(signal) {
   tick();
   const id = setInterval(tick, 10_000);
   signal.addEventListener('abort', () => clearInterval(id));
+}
+
+/* ============================================================
+   LIGHTBOX — click a project image to view it at full size
+   ------------------------------------------------------------
+   Project images ship at their full resolution but are shown small
+   inside the article grid, so opening one is a real upgrade. The
+   viewer fits the image to the screen first and can switch to 1:1
+   actual pixels (drag or scroll to pan) for close inspection.
+   Runs for reduced-motion visitors too — it's a feature, not motion.
+   ============================================================ */
+const LB_ICON = {
+  close:
+    '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  prev: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H4m0 0 6-6m-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  next: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+};
+
+/** Markdown images carry one full-res src; the cover carries a srcset —
+ *  take its widest candidate so the viewer always shows the biggest file. */
+function widestSrc(img) {
+  const set = img.getAttribute('srcset');
+  if (!set) return img.currentSrc || img.src;
+  let best = { url: img.currentSrc || img.src, w: 0 };
+  for (const cand of set.split(',')) {
+    const [url, desc] = cand.trim().split(/\s+/);
+    const w = parseInt(desc, 10) || 0;
+    if (url && w > best.w) best = { url, w };
+  }
+  return best.url;
+}
+
+function initLightbox(signal) {
+  const shots = $$('[data-zoom] [data-cover] img, [data-zoom] .article img');
+  if (!shots.length) return;
+
+  const lb = document.createElement('div');
+  lb.className = 'lb';
+  lb.hidden = true;
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', 'Image viewer');
+  lb.innerHTML = `
+    <div class="lb-bar">
+      <p class="lb-count" aria-live="polite"></p>
+      <div class="lb-actions">
+        <button type="button" class="lb-btn lb-size"></button>
+        <button type="button" class="lb-btn lb-icon lb-close" aria-label="Close viewer">${LB_ICON.close}</button>
+      </div>
+    </div>
+    <div class="lb-stage"><div class="lb-frame"><img class="lb-img" alt="" draggable="false"></div></div>
+    <div class="lb-foot">
+      <button type="button" class="lb-btn lb-icon lb-prev" aria-label="Previous image">${LB_ICON.prev}</button>
+      <p class="lb-cap"></p>
+      <button type="button" class="lb-btn lb-icon lb-next" aria-label="Next image">${LB_ICON.next}</button>
+    </div>`;
+  document.body.append(lb);
+
+  const stage = $('.lb-stage', lb);
+  const view = $('.lb-img', lb);
+  const cap = $('.lb-cap', lb);
+  const count = $('.lb-count', lb);
+  const sizeBtn = $('.lb-size', lb);
+  const prevBtn = $('.lb-prev', lb);
+  const nextBtn = $('.lb-next', lb);
+  const single = shots.length < 2;
+
+  count.hidden = single;
+  prevBtn.hidden = single;
+  nextBtn.hidden = single;
+
+  let index = -1;
+  let opener = null;
+  let actual = false;
+
+  /* ---- the trigger images ---- */
+  shots.forEach((img, i) => {
+    img.classList.add('zoomable');
+    img.tabIndex = 0;
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', img.alt ? `${img.alt} — view full size` : 'View image full size');
+    img.addEventListener('click', () => open(i), { signal });
+    img.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        open(i);
+      },
+      { signal }
+    );
+  });
+
+  /* ---- fit ⇄ actual size ---- */
+  function fits() {
+    return view.naturalWidth <= stage.clientWidth && view.naturalHeight <= stage.clientHeight;
+  }
+
+  function setActual(on) {
+    actual = on && !fits();
+    stage.classList.toggle('is-actual', actual);
+    view.style.width = actual ? `${view.naturalWidth}px` : '';
+    sizeBtn.textContent = actual ? 'Fit to screen' : 'Actual size';
+    sizeBtn.hidden = fits();
+    if (actual) {
+      // start the pan in the middle of the image
+      stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+      stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
+    }
+  }
+
+  function show(i) {
+    index = (i + shots.length) % shots.length;
+    const img = shots[index];
+    lb.classList.add('is-loading');
+    view.src = widestSrc(img);
+    view.alt = img.alt || '';
+    cap.textContent = img.alt || '';
+    count.textContent = `${index + 1} / ${shots.length}`;
+    const done = () => {
+      lb.classList.remove('is-loading');
+      setActual(false);
+    };
+    view.complete ? done() : view.addEventListener('load', done, { once: true });
+  }
+
+  /* ---- open / close ---- */
+  function open(i) {
+    opener = shots[i];
+    lb.hidden = false;
+    show(i);
+    lockScroll(true);
+    requestAnimationFrame(() => lb.classList.add('is-open'));
+    $('.lb-close', lb).focus();
+  }
+
+  function close(immediate) {
+    if (lb.hidden) return;
+    lb.classList.remove('is-open');
+    lockScroll(false);
+    const finish = () => {
+      lb.hidden = true;
+      view.removeAttribute('src');
+      opener?.focus({ preventScroll: true });
+      opener = null;
+    };
+    if (immediate || reduced) finish();
+    else setTimeout(finish, 260);
+  }
+
+  let padded = false;
+  function lockScroll(on) {
+    if (on) {
+      const bar = window.innerWidth - html.clientWidth;
+      if (bar > 0) {
+        html.style.paddingRight = `${bar}px`;
+        padded = true;
+      }
+      html.style.overflow = 'hidden';
+      lenis?.stop();
+    } else {
+      html.style.overflow = '';
+      if (padded) html.style.paddingRight = '';
+      padded = false;
+      lenis?.start();
+    }
+  }
+
+  /* ---- controls ---- */
+  const on = (el, ev, fn) => el.addEventListener(ev, fn, { signal });
+
+  on($('.lb-close', lb), 'click', () => close());
+  on(prevBtn, 'click', () => show(index - 1));
+  on(nextBtn, 'click', () => show(index + 1));
+  on(sizeBtn, 'click', () => setActual(!actual));
+
+  on(document, 'keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') return close();
+    // at 1:1 the arrows pan the image instead of changing it
+    if (!actual && !single && e.key === 'ArrowLeft') return show(index - 1);
+    if (!actual && !single && e.key === 'ArrowRight') return show(index + 1);
+    if (e.key !== 'Tab') return;
+    // keep focus inside the dialog
+    const focusable = $$('.lb-btn', lb).filter((b) => !b.hidden);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  /* ---- pointer gestures on the stage: pan, toggle 1:1, close ----
+     Driven from the gesture rather than from `click`: pointer capture
+     retargets the follow-up click to the stage, so a click on the zoomed
+     image would otherwise read as a click on the backdrop and close. */
+  let pan = null;
+  on(stage, 'pointerdown', (e) => {
+    if (e.button !== 0) return;
+    pan = {
+      x: e.clientX,
+      y: e.clientY,
+      left: stage.scrollLeft,
+      top: stage.scrollTop,
+      onImage: e.target === view,
+      moved: false,
+    };
+    if (!actual) return;
+    stage.setPointerCapture(e.pointerId);
+    stage.classList.add('is-panning');
+  });
+  on(stage, 'pointermove', (e) => {
+    if (!pan) return;
+    const dx = e.clientX - pan.x;
+    const dy = e.clientY - pan.y;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) pan.moved = true;
+    if (!actual) return;
+    stage.scrollLeft = pan.left - dx;
+    stage.scrollTop = pan.top - dy;
+  });
+  on(stage, 'pointerup', () => {
+    const gesture = pan;
+    pan = null;
+    stage.classList.remove('is-panning');
+    if (!gesture || gesture.moved) return; // a drag pans, it never clicks through
+    gesture.onImage ? setActual(!actual) : close();
+  });
+  // touch panning is handled natively (touch-action), which cancels the pointer
+  on(stage, 'pointercancel', () => {
+    pan = null;
+    stage.classList.remove('is-panning');
+  });
+
+  on(window, 'resize', () => {
+    if (!lb.hidden) setActual(actual);
+  });
+
+  signal.addEventListener('abort', () => {
+    close(true);
+    lb.remove();
+  });
 }
