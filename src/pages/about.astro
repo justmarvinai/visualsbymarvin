@@ -7,6 +7,9 @@ import { experience, education, type Station } from '../data/experience';
 import photo from '../assets/image_pill_me.png';
 
 const doing = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows'];
+
+/** 'On-site' → 'mode-onsite' */
+const modeClass = (mode: string) => `mode mode-${mode.toLowerCase().replace(/[^a-z]/g, '')}`;
 ---
 
 <Base title="About me" description={`About ${site.name} — ${site.role} from ${site.location}.`}>
@@ -98,7 +101,10 @@ const doing = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows'];
               class="border-ink/10 grid gap-1 border-t py-6 sm:grid-cols-[170px_1fr] sm:gap-6 sm:py-7"
               data-reveal
             >
-              <p class="text-soft text-sm tabular-nums sm:pt-1">{s.period}</p>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 sm:block sm:pt-1">
+                <p class="text-soft text-sm tabular-nums">{s.period}</p>
+                {s.mode && <span class:list={[modeClass(s.mode), 'sm:mt-2']}>{s.mode}</span>}
+              </div>
               <div>
                 <h3 class="text-lg font-semibold tracking-tight">{s.role}</h3>
                 <p class="text-soft mt-0.5 text-[15px]">{s.company}</p>
@@ -122,7 +128,10 @@ const doing = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows'];
               class="border-ink/10 grid gap-1 border-t py-6 sm:grid-cols-[170px_1fr] sm:gap-6 sm:py-7"
               data-reveal
             >
-              <p class="text-soft text-sm tabular-nums sm:pt-1">{s.period}</p>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 sm:block sm:pt-1">
+                <p class="text-soft text-sm tabular-nums">{s.period}</p>
+                {s.mode && <span class:list={[modeClass(s.mode), 'sm:mt-2']}>{s.mode}</span>}
+              </div>
               <div>
                 <h3 class="text-lg font-semibold tracking-tight">{s.role}</h3>
                 <p class="text-soft mt-0.5 text-[15px]">{s.company}</p>
