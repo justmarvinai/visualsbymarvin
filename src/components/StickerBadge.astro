@@ -1,0 +1,34 @@
+---
+import Logo from './Logo.astro';
+
+/**
+ * ROTATING STICKER BADGE
+ * ------------------------------------------------------------
+ * The little spinning coin that overlaps the hero pill. The text
+ * runs around a circle; the whole disc turns slowly (and stops for
+ * reduced-motion visitors).
+ *
+ * ✏️ EDIT HERE: change `text` — keep it short and end with a
+ *    separator so the loop reads evenly all the way round.
+ */
+interface Props {
+  text?: string;
+  class?: string;
+}
+const { text = 'visualsbymarvin — creative designer — ', class: className = '' } = Astro.props;
+
+// repeated so the ring is always full, whatever the wording
+const ring = text.repeat(2);
+---
+
+<div class:list={['sticker', className]} aria-hidden="true">
+  <svg class="sticker-ring" viewBox="0 0 100 100">
+    <defs>
+      <path id="sticker-path" d="M50,50 m-35.5,0 a35.5,35.5 0 1,1 71,0 a35.5,35.5 0 1,1 -71,0"></path>
+    </defs>
+    <text class="sticker-text">
+      <textPath href="#sticker-path" startOffset="0">{ring}</textPath>
+    </text>
+  </svg>
+  <Logo class="sticker-core size-4" />
+</div>

@@ -14,6 +14,9 @@
  *   .magnetic             → element gently sticks to the cursor
  *   .gate-mi              → masked line revealed by the load timeline
  *   data-zoom             → images inside open full size in the lightbox
+ *   data-count-to         → number counts up to that value in view
+ *   data-pill-tilt        → element tilts in 3D toward the cursor
+ *   .hl                   → highlighter mark that draws itself on
  */
 
 import gsap from 'gsap';
@@ -178,12 +181,15 @@ function initPage() {
 
   initMagnetic(signal);
   initToolFloat(signal);
+  initPillTilt(signal);
 
   entrance(!html.classList.contains('booted'));
   initReveals();
   initMasks();
   initCards(signal);
   initParallax();
+  initHighlights();
+  initCounters();
 
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }
@@ -730,5 +736,78 @@ function initLightbox(signal) {
   signal.addEventListener('abort', () => {
     close(true);
     lb.remove();
+  });
+}
+
+/* ============================================================
+   PLAYFUL BITS — counters, cursor tilt, highlighter marks
+   ============================================================ */
+
+/** Numbers count up the first time they scroll into view.
+ *  The final value is already in the HTML, so no-JS and reduced-motion
+ *  visitors read the right number and only the animation is skipped. */
+function initCounters() {
+  $$('[data-count-to]').forEach((el) => {
+    const to = Number(el.dataset.countTo);
+    if (!Number.isFinite(to)) return;
+    const pad = Number(el.dataset.countPad) || 0;
+    const n = { v: 0 };
+    const draw = () => (el.textContent = String(Math.round(n.v)).padStart(pad, '0'));
+    gsap.fromTo(
+      n,
+      { v: 0 },
+      {
+        v: to,
+        // big numbers get a little longer, but never a boring long crawl
+        duration: Math.min(2.1, 0.8 + to / 500),
+        ease: 'power2.out',
+        onUpdate: draw,
+        // without this the counter would blank to 0 on load and only read
+        // correctly once it happened to be scrolled past
+        immediateRender: false,
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+      }
+    );
+  });
+}
+
+/** The hero pill leans toward the cursor — the one bit of 3D on the site. */
+function initPillTilt(signal) {
+  if (!finePointer) return;
+  const wrap = $('[data-pill-tilt]');
+  const pill = wrap && $('.hero-pill', wrap);
+  const hero = $('.hero-sec');
+  if (!wrap || !pill || !hero) return;
+
+  const rx = gsap.quickTo(pill, 'rotationX', { duration: 0.8, ease: 'power3' });
+  const ry = gsap.quickTo(pill, 'rotationY', { duration: 0.8, ease: 'power3' });
+  const clamp = (v) => Math.max(-1, Math.min(1, v));
+
+  hero.addEventListener(
+    'pointermove',
+    (e) => {
+      const r = wrap.getBoundingClientRect();
+      rx(clamp((e.clientY - (r.top + r.height / 2)) / (r.height / 2)) * -7);
+      ry(clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 2)) * 9);
+    },
+    { signal }
+  );
+  hero.addEventListener('pointerleave', () => (rx(0), ry(0)), { signal });
+}
+
+/** Highlighter marks sweep in — the hero's after the title reveal,
+ *  the rest as they scroll into view. */
+function initHighlights() {
+  $$('.hl').forEach((el, i) => {
+    if (el.closest('.hero-sec')) {
+      gsap.delayedCall(1 + i * 0.14, () => el.classList.add('is-drawn'));
+      return;
+    }
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+      onEnter: () => el.classList.add('is-drawn'),
+    });
   });
 }

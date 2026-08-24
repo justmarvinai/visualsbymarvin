@@ -1,0 +1,96 @@
+---
+import Logo from './Logo.astro';
+import DuoStreak from './DuoStreak.astro';
+import { duolingo, quests, fetchDuolingoStreak, type Quest } from '../data/sidequests';
+
+/**
+ * SIDEQUESTS
+ * ------------------------------------------------------------
+ * The "outside the client work" section. The Duolingo streak is the
+ * headline stat; the other quests sit beside it.
+ *
+ * The streak is resolved at build time: live from the profile when a
+ * username is set, otherwise the number in src/data/sidequests.ts.
+ * When it ends up at 0 the card is left out entirely, so a placeholder
+ * streak never ships.
+ */
+const live = await fetchDuolingoStreak(duolingo.username);
+const streak = live ?? duolingo.streak;
+const showStreak = streak > 0;
+
+---
+
+<section id="sidequests" class="wrap mt-32 scroll-mt-24 sm:mt-44">
+  <div class="mx-auto max-w-5xl">
+    <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
+      <div>
+        <p class="text-ink flex items-center gap-2 text-sm font-medium">
+          <Logo class="text-violet-ink size-3.5" />
+          Sidequests
+        </p>
+        <h2 class="display mt-3 text-[clamp(1.9rem,4.6vw,3rem)] leading-[1.05] tracking-[-0.03em]">
+          Off the <span class="hl hl-violet">main quest</span>
+        </h2>
+      </div>
+      <p class="text-soft max-w-xs text-[15px] leading-relaxed">
+        Design is the day job. These are the things I keep showing up for anyway.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-5">
+      {
+        showStreak && (
+          <div class="lg:col-span-2">
+            <DuoStreak streak={streak} language={duolingo.language} href={duolingo.profileUrl} live={live !== null} />
+          </div>
+        )
+      }
+
+      {
+        quests.map((q: Quest) => (
+          <article
+            class:list={['quest', `quest-${q.accent}`, 'group', showStreak ? 'lg:col-span-3' : 'lg:col-span-5']}
+            data-reveal
+          >
+            {q.link && (
+              <a
+                href={q.link.href}
+                target={q.link.external ? '_blank' : undefined}
+                rel={q.link.external ? 'noopener noreferrer' : undefined}
+                class="absolute inset-0 z-10 rounded-[inherit]"
+                aria-label={`${q.title} — ${q.link.label}`}
+              />
+            )}
+
+            <p class="quest-kicker">{q.kicker}</p>
+            <h3 class="quest-title">{q.title}</h3>
+            <p class="quest-blurb">{q.blurb}</p>
+
+            {q.tags && (
+              <ul class="quest-tags">
+                {q.tags.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            )}
+
+            {q.link && (
+              <p class="quest-foot">
+                {q.link.label}
+                <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path
+                    d="M4 12L12 4M12 4H5.5M12 4v6.5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </p>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

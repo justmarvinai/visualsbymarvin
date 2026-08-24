@@ -15,10 +15,22 @@
   --color-paper: #f1f0ed; /* page background */
   --color-ink: #141413; /* main text (flips to light in dark mode) */
   --color-soft: #71716a; /* muted text */
-  --color-lime: #a3e635; /* signature accent */
+  --color-lime: #a3e635; /* signature accent — still the lead */
   --color-lime-ink: #65a30d; /* accent for small text / icons */
-  --color-amber-ink: #b45309; /* work-mode chip: Hybrid */
-  --color-sky-ink: #0369a1; /* work-mode chip: On-site */
+
+  /* -------- accent family --------
+     Four supporting hues so the site can be colourful without losing
+     lime as the brand. `-ink` = the readable-on-paper version, used for
+     text and icons; the plain token is the fill/blob version. Project
+     cards, sidequests and stickers cycle through these. */
+  --color-violet: #a78bfa;
+  --color-violet-ink: #6d28d9;
+  --color-coral: #fda4af;
+  --color-coral-ink: #e11d48;
+  --color-sky: #7dd3fc;
+  --color-sky-ink: #0369a1;
+  --color-sun: #fcd34d;
+  --color-amber-ink: #b45309;
   --color-on-lime: #141413; /* text on a lime background — dark in BOTH modes */
   --color-card: #ffffff; /* tool chips, nav pill, toggles */
   --color-panel: #141413; /* footer block */
@@ -44,8 +56,15 @@
   --color-soft: #8c8c85;
   --color-lime: #a3e635;
   --color-lime-ink: #a3e635; /* brighter, for contrast on dark */
-  --color-amber-ink: #fbbf24;
+  /* accents keep their hue but brighten so they read on the dark page */
+  --color-violet: #c4b5fd;
+  --color-violet-ink: #c4b5fd;
+  --color-coral: #fda4af;
+  --color-coral-ink: #fda4af;
+  --color-sky: #7dd3fc;
   --color-sky-ink: #38bdf8;
+  --color-sun: #fcd34d;
+  --color-amber-ink: #fbbf24;
   --color-card: #1c1c1a;
   --color-panel: #171715; /* footer sits slightly above the page */
   --color-panel-fg: #f1f0ed;
@@ -803,5 +822,600 @@ html.theme-anim *::after {
   .lb-img,
   .zoomable {
     transition: none;
+  }
+}
+
+/* ============================================================
+   PLAYFUL KIT
+   ------------------------------------------------------------
+   The pieces that give the site its personality: the marquee band,
+   the spinning sticker, highlighter marks and the sidequest cards.
+   ============================================================ */
+
+/* ----- marker swash under a word -----
+   A stroke UNDER the word rather than a fill behind it: the text keeps
+   its own colour, so it stays readable in both themes (a pastel fill
+   behind light dark-mode text does not). Organic radius + a slight tilt
+   keep it hand-made. */
+.hl {
+  position: relative;
+  z-index: 0;
+  white-space: nowrap;
+}
+.hl::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -0.09em;
+  right: -0.09em;
+  bottom: var(--hl-b, 0.055em);
+  height: var(--hl-h, 0.17em);
+  background: var(--hl, var(--color-lime));
+  border-radius: 0.5em 0.28em 0.42em 0.24em;
+  transform-origin: left center;
+  /* no JS → the stroke is simply already drawn */
+  transform: rotate(-0.9deg) scaleX(1);
+}
+html.js .hl::before {
+  transform: rotate(-0.9deg) scaleX(0);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.js .hl.is-drawn::before {
+  transform: rotate(-0.9deg) scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .hl::before {
+    transform: rotate(-0.9deg) scaleX(1);
+    transition: none;
+  }
+}
+/* body-size text gets a chunkier stroke so it still reads as a mark */
+.hl-thick {
+  --hl-h: 0.4em;
+  --hl-b: 0.02em;
+}
+.hl-lime {
+  --hl: var(--color-lime);
+}
+.hl-violet {
+  --hl: var(--color-violet);
+}
+.hl-coral {
+  --hl: var(--color-coral);
+}
+.hl-sky {
+  --hl: var(--color-sky);
+}
+
+/* ----- marquee band ----- */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  width: 108vw;
+  margin-inline: -4vw;
+  rotate: var(--tilt, -2deg);
+  background: var(--color-lime);
+  color: var(--color-on-lime);
+  padding-block: 0.7rem;
+  box-shadow: var(--shadow-chip);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-dur, 38s) linear infinite;
+}
+.marquee-run {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  padding-right: clamp(1.25rem, 3vw, 2.25rem);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.6vw, 1.6rem);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.marquee-star {
+  opacity: 0.55;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ----- spinning sticker ----- */
+.sticker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(84px, 13vw, 112px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  box-shadow: var(--shadow-pill);
+}
+.sticker-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: sticker-spin 18s linear infinite;
+}
+.sticker-text {
+  fill: currentColor;
+  font-family: var(--font-sans);
+  font-size: 8.4px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sticker-core {
+  position: relative;
+  color: var(--color-lime);
+}
+@keyframes sticker-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticker-ring {
+    animation: none;
+  }
+}
+
+/* ----- sidequest cards ----- */
+.quest {
+  --quest-ink: var(--color-lime-ink);
+  --quest-fill: var(--color-lime);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: clamp(1.35rem, 3vw, 1.9rem);
+  border-radius: clamp(20px, 2.5vw, 28px);
+  background: color-mix(in srgb, var(--quest-fill) 16%, var(--color-card));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--quest-ink) 22%, transparent);
+  overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.45s ease;
+}
+:root[data-theme='dark'] .quest {
+  background: color-mix(in srgb, var(--quest-fill) 12%, var(--color-card));
+}
+.quest:hover {
+  transform: translateY(-4px) rotate(-0.6deg);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--quest-ink) 40%, transparent),
+    var(--shadow-pill);
+}
+.quest-lime {
+  --quest-ink: var(--color-lime-ink);
+  --quest-fill: var(--color-lime);
+}
+.quest-violet {
+  --quest-ink: var(--color-violet-ink);
+  --quest-fill: var(--color-violet);
+}
+.quest-coral {
+  --quest-ink: var(--color-coral-ink);
+  --quest-fill: var(--color-coral);
+}
+.quest-sky {
+  --quest-ink: var(--color-sky-ink);
+  --quest-fill: var(--color-sky);
+}
+
+.quest-kicker {
+  color: var(--quest-ink);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.quest-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 0.4rem;
+}
+.quest-blurb {
+  color: color-mix(in srgb, var(--color-ink) 75%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-top: 0.5rem;
+  max-width: 34rem;
+}
+.quest-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+.quest-tags li {
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  background: color-mix(in srgb, var(--quest-ink) 12%, transparent);
+  color: var(--quest-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.quest-foot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
+  color: var(--quest-ink);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.quest .arr {
+  transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.quest:hover .arr {
+  transform: translate(3px, -3px);
+}
+
+/* the streak card */
+.quest-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.quest-flame {
+  color: var(--quest-ink);
+  width: clamp(1.9rem, 4vw, 2.5rem);
+  flex-shrink: 0;
+  animation: flame-flicker 2.4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(1.07) rotate(-3deg);
+  }
+  70% {
+    transform: scale(0.97) rotate(2deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quest-flame {
+    animation: none;
+  }
+}
+.quest-num {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 9vw, 4.6rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.quest-unit {
+  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
+  font-size: 0.95rem;
+  font-weight: 550;
+  margin-top: 0.5rem;
+}
+
+/* ----- project cards ----- */
+.pcard {
+  --pc-ink: var(--color-lime-ink);
+  --pc-fill: var(--color-lime);
+}
+.pcard-lime {
+  --pc-ink: var(--color-lime-ink);
+  --pc-fill: var(--color-lime);
+}
+.pcard-violet {
+  --pc-ink: var(--color-violet-ink);
+  --pc-fill: var(--color-violet);
+}
+.pcard-coral {
+  --pc-ink: var(--color-coral-ink);
+  --pc-fill: var(--color-coral);
+}
+.pcard-sky {
+  --pc-ink: var(--color-sky-ink);
+  --pc-fill: var(--color-sky);
+}
+
+/* the frame carries the tilt + the colour pad that peeks out behind
+   the image on hover, so the card feels like a physical thing */
+.pcard-frame {
+  position: relative;
+  border-radius: clamp(20px, 2.5vw, 28px);
+  transition: transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+.pcard-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--pc-fill);
+  opacity: 0;
+  transform: rotate(0deg) scale(0.98);
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1),
+    opacity 0.4s ease;
+}
+.pcard:hover .pcard-frame {
+  transform: translateY(-6px) rotate(-0.8deg);
+}
+.pcard:hover .pcard-frame::before {
+  opacity: 1;
+  transform: rotate(2.6deg) scale(1.015);
+}
+
+/* big index numeral, sitting on the corner of the image */
+.pcard-index {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.9rem;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  display: grid;
+  place-items: center;
+  min-width: 2.1em;
+  padding: 0.22em 0.4em;
+  border-radius: 999px;
+  background: var(--color-card);
+  color: var(--pc-ink);
+  box-shadow: var(--shadow-chip);
+  transition: transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+.pcard:hover .pcard-index {
+  transform: translateY(-2px) rotate(-5deg) scale(1.06);
+}
+
+/* categories as little pills instead of a pipe-separated line */
+.pcard-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+.pcard-cats span {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  background: color-mix(in srgb, var(--pc-ink) 13%, transparent);
+  color: var(--pc-ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+/* the button picks up the card's own accent rather than the global lime */
+.pcard:hover .pcard-btn {
+  background: var(--pc-fill);
+  color: var(--color-on-lime);
+}
+:root[data-theme='dark'] .pcard:hover .pcard-btn {
+  color: #141413;
+}
+
+/* the marquee breaks out of .wrap and must never cause a sideways scroll */
+.marquee-bleed {
+  position: relative;
+  overflow: hidden;
+  padding-block: 1.1rem;
+}
+
+/* hero pill + its sticker */
+.hero-pill-wrap {
+  perspective: 900px;
+}
+.hero-pill {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.hero-sticker {
+  position: absolute;
+  right: -0.75rem;
+  bottom: -1.25rem;
+  z-index: 3;
+}
+@media (min-width: 640px) {
+  .hero-sticker {
+    right: -1.75rem;
+    bottom: -1.5rem;
+  }
+}
+
+/* oversized flame sitting in the corner of the streak card — pure
+   decoration, so it carries no data and is hidden from readers */
+.quest-watermark {
+  position: absolute;
+  right: -1.6rem;
+  bottom: -2.2rem;
+  width: 9.5rem;
+  color: var(--quest-ink);
+  opacity: 0.11;
+  pointer-events: none;
+  transition: transform 0.6s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+.quest:hover .quest-watermark {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+/* ============================================================
+   DUOLINGO STREAK WIDGET
+   ------------------------------------------------------------
+   Deliberately keeps Duolingo's own light palette in BOTH themes
+   so it reads as an embedded app widget. Their colours:
+     green #58CC02 (edge #58A700) · flame #FF9600 / #FFC800
+     text #4B4B4B · muted #AFAFAF · outline #E5E5E5
+   ============================================================ */
+
+.duo {
+  height: 100%;
+  --duo-green: #58cc02;
+  --duo-green-edge: #58a700;
+  --duo-ink: #4b4b4b;
+  --duo-muted: #afafaf;
+  --duo-line: #e5e5e5;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border-radius: 20px;
+  border: 2px solid var(--duo-line);
+  background: #fff;
+  overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+.duo:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px -18px rgb(20 20 19 / 0.45);
+}
+
+/* ----- header row ----- */
+.duo-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.duo-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--duo-ink);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.duo-flag {
+  width: 1.75rem;
+  height: auto;
+  flex-shrink: 0;
+}
+.duo-badge {
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  background: #ddf4ff;
+  color: #1899d6;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ----- flame + number ----- */
+.duo-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(1rem, 3vw, 1.6rem);
+}
+.duo-flame {
+  width: clamp(3.4rem, 8vw, 4.4rem);
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgb(255 150 0 / 0.35));
+  transform-origin: 50% 85%;
+  animation: duo-flicker 2.6s ease-in-out infinite;
+}
+@keyframes duo-flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.06, 0.97) rotate(-2.5deg);
+  }
+  65% {
+    transform: scale(0.97, 1.04) rotate(2deg);
+  }
+}
+.duo-num {
+  margin-top: 0.5rem;
+  color: #ff9600;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 4.2rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.duo-unit {
+  margin-top: 0.15rem;
+  color: var(--duo-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ----- the chunky Duolingo button ----- */
+.duo-btn {
+  display: block;
+  margin-top: auto;
+  border-radius: 14px;
+  padding: 0.75rem 1rem 0.8rem;
+  background: var(--duo-green);
+  box-shadow: 0 4px 0 var(--duo-green-edge);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.2s ease;
+}
+.duo:hover .duo-btn {
+  background: #61d904;
+}
+/* presses into the page, like the real thing */
+.duo:active .duo-btn {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--duo-green-edge);
+}
+
+/* ----- optional mascot ----- */
+.duo-mascot {
+  position: absolute;
+  right: -1.1rem;
+  bottom: 4.4rem;
+  width: clamp(4.2rem, 10vw, 5.8rem);
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.duo:hover .duo-mascot {
+  transform: translateY(-4px) rotate(-4deg);
+}
+
+.duo:focus-visible {
+  outline: 3px solid var(--duo-green);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duo-flame {
+    animation: none;
   }
 }
