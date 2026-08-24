@@ -1,52 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
+---
 
-<Base title="Imprint" description={`Imprint / Impressum of ${site.name}.`}>
-  <section class="wrap max-w-2xl pt-32 pb-8 sm:pt-40">
-    <h1 class="display text-[clamp(2.4rem,6vw,4rem)] tracking-[-0.03em]">
-      <span class="mask"><span class="mi gate-mi">Imprint</span></span>
+<Base title="Impressum" description={`Impressum von ${site.name}.`}>
+  <section class="wrap max-w-2xl pt-32 pb-8 sm:pt-40" lang="de">
+    <h1 class="display hyphens-auto text-[clamp(2.2rem,5.5vw,3.6rem)] tracking-[-0.03em]">
+      <span class="mask"><span class="mi gate-mi">Impressum</span></span>
     </h1>
 
-    <div class="text-ink/80 mt-10 space-y-8 leading-relaxed" data-enter>
-      <div>
-        <h2 class="text-ink mb-2 font-semibold">Angaben gemäß § 5 DDG</h2>
-        <p>
-          visualsbymarvin - {site.name}<br />
-          c/o Online-Impressum #9719<br />
-          Europaring 90<br />
-          53757 St Augustin<br />
-          Deutschland
-        </p>
-      </div>
+    {/* Content taken verbatim from the eRecht24 document — do not reword. */}
+    <div class="legal mt-10" data-enter>
+      <p>Marvin Gehlen<br />
+      Europaring, 90<br />
+      c/o Online-Impressum #9719<br />
+      53757 St Augustin</p>
 
-      <div>
-        <h2 class="text-ink mb-2 font-semibold">Kontakt</h2>
-        <p>
-          E-Mail: <a class="u-link font-medium" href={`mailto:${site.email}`}>{site.email}</a>
-        </p>
-      </div>
+      <h2>Kontakt</h2>
+      <p>Telefon: &#91;Telefonnummer&#93;<br />
+      E-Mail: m.gehlen26@gmail.com</p>
 
-      <div>
-        <h2 class="text-ink mb-2 font-semibold">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-          visualsbymarvin - {site.name}<br />
-          c/o Online-Impressum #9719<br />
-          Europaring 90<br />
-          53757 St Augustin<br />
-          Deutschland
-      </div>
-
-      <div>
-        <h2 class="text-ink mb-2 font-semibold">Haftung für Links</h2>
-        <p>
-          This website contains links to external third-party websites over whose content I have no
-          control. The respective provider is always responsible for the content of the linked pages.
-
-          Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen
-          Einfluss habe. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
-          verantwortlich.
-        </p>
-      </div>
+      <p>Quelle: <a href="https://www.e-recht24.de">https://www.e-recht24.de</a></p>
     </div>
   </section>
 </Base>

@@ -50,8 +50,10 @@ const socials = site.socials.filter((s) => s.url);
       class="wrap text-panel-fg/60 flex flex-col items-center justify-between gap-3 py-6 pb-24 text-sm sm:flex-row sm:pb-22"
     >
       <p>{site.name} © {year}</p>
-      <p class="flex items-center gap-2">
+      <p class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
         <a href="/imprint/" class="u-link hover:text-panel-fg transition-colors">Impressum</a>
+        <span aria-hidden="true">–</span>
+        <a href="/privacy/" class="u-link hover:text-panel-fg transition-colors">Datenschutz</a>
         <span aria-hidden="true">–</span>
         <a href="/about/" class="u-link hover:text-panel-fg transition-colors">About me</a>
         <span aria-hidden="true">–</span>
