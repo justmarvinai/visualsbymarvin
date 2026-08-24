@@ -31,6 +31,7 @@ npm run preview # preview the production build
 | **Sidequests** (Duolingo streak, side projects) | `src/data/sidequests.ts` |
 | Scrolling marquee words | `src/components/Marquee.astro` |
 | Spinning sticker on the hero pill | `src/components/StickerBadge.astro` |
+| Duolingo streak widget | `src/components/DuoStreak.astro` |
 | **Colors & fonts** (light mode) | `src/styles/global.css` (the `@theme` block at the top) |
 | **Accent colours** (lime / violet / coral / sky) | `src/styles/global.css` — the `accent family` block |
 | **Dark mode colors** | `src/styles/global.css` (the `:root[data-theme='dark']` block right below `@theme`) |
@@ -174,9 +175,18 @@ never ship by accident.
 export const duolingo = {
   username: '',
   streak: 214,        // ← your real number
-  language: 'Spanish',
+  language: 'Japanese',
 };
 ```
+
+### Duo the mascot
+
+Drop an image at **`src/assets/duo.png`** (`.webp`, `.svg` and `.jpg` also
+work) and Duo appears peeking out beside the streak number. That is the only
+step — nothing to import or configure.
+
+While the file is missing the widget just renders without him, so the build
+never breaks over a missing mascot.
 
 **Live.** Fill in `username` with your public Duolingo profile name and the
 streak is fetched from Duolingo while the site builds — no CORS, no extra

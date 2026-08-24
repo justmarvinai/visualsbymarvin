@@ -1258,3 +1258,164 @@ html.js .hl.is-drawn::before {
 .quest:hover .quest-watermark {
   transform: rotate(-8deg) scale(1.06);
 }
+
+/* ============================================================
+   DUOLINGO STREAK WIDGET
+   ------------------------------------------------------------
+   Deliberately keeps Duolingo's own light palette in BOTH themes
+   so it reads as an embedded app widget. Their colours:
+     green #58CC02 (edge #58A700) · flame #FF9600 / #FFC800
+     text #4B4B4B · muted #AFAFAF · outline #E5E5E5
+   ============================================================ */
+
+.duo {
+  height: 100%;
+  --duo-green: #58cc02;
+  --duo-green-edge: #58a700;
+  --duo-ink: #4b4b4b;
+  --duo-muted: #afafaf;
+  --duo-line: #e5e5e5;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border-radius: 20px;
+  border: 2px solid var(--duo-line);
+  background: #fff;
+  overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+.duo:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px -18px rgb(20 20 19 / 0.45);
+}
+
+/* ----- header row ----- */
+.duo-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.duo-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--duo-ink);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.duo-flag {
+  width: 1.75rem;
+  height: auto;
+  flex-shrink: 0;
+}
+.duo-badge {
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  background: #ddf4ff;
+  color: #1899d6;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ----- flame + number ----- */
+.duo-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(1rem, 3vw, 1.6rem);
+}
+.duo-flame {
+  width: clamp(3.4rem, 8vw, 4.4rem);
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgb(255 150 0 / 0.35));
+  transform-origin: 50% 85%;
+  animation: duo-flicker 2.6s ease-in-out infinite;
+}
+@keyframes duo-flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.06, 0.97) rotate(-2.5deg);
+  }
+  65% {
+    transform: scale(0.97, 1.04) rotate(2deg);
+  }
+}
+.duo-num {
+  margin-top: 0.5rem;
+  color: #ff9600;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 4.2rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.duo-unit {
+  margin-top: 0.15rem;
+  color: var(--duo-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ----- the chunky Duolingo button ----- */
+.duo-btn {
+  display: block;
+  margin-top: auto;
+  border-radius: 14px;
+  padding: 0.75rem 1rem 0.8rem;
+  background: var(--duo-green);
+  box-shadow: 0 4px 0 var(--duo-green-edge);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.2s ease;
+}
+.duo:hover .duo-btn {
+  background: #61d904;
+}
+/* presses into the page, like the real thing */
+.duo:active .duo-btn {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--duo-green-edge);
+}
+
+/* ----- optional mascot ----- */
+.duo-mascot {
+  position: absolute;
+  right: -1.1rem;
+  bottom: 4.4rem;
+  width: clamp(4.2rem, 10vw, 5.8rem);
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.duo:hover .duo-mascot {
+  transform: translateY(-4px) rotate(-4deg);
+}
+
+.duo:focus-visible {
+  outline: 3px solid var(--duo-green);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duo-flame {
+    animation: none;
+  }
+}

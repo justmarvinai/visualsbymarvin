@@ -19,7 +19,7 @@ export const site = {
     'Marvin Gehlen — Junior Creative Designer from Germany focused on creating visuals that work.',
 
   /** Small status badge (top right + footer) */
-  availability: 'Currently Employeed',
+  availability: 'Currently Employed',
 
   /**
    * Social links — leave the url empty ('') to hide a link.

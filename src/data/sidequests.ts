@@ -19,8 +19,8 @@ export const duolingo = {
   username: '',
   /** ✏️ Your current streak in days. 0 hides the card. */
   streak: 0,
-  /** Shown under the number, e.g. 'Spanish'. */
-  language: 'Spanish',
+  /** Shown in the widget header next to the flag. */
+  language: 'Japanese',
   /** Where the card links to. */
   profileUrl: 'https://www.duolingo.com/',
 };
