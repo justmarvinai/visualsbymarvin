@@ -1,12 +1,3 @@
-/**
- * EXPERIENCE & EDUCATION (About page)
- * ------------------------------------------------------------
- * ✏️ EDIT HERE: replace the [placeholder] entries with your real
- *    stations — newest first, like on LinkedIn.
- *    Delete or copy blocks as needed.
- */
-
-/** Where the work happens — shown as a coloured chip next to the period. */
 export type WorkMode = 'Remote' | 'Hybrid' | 'On-site';
 
 export type Station = {
@@ -31,7 +22,7 @@ export const experience: Station[] = [
     role: 'Media Design - Dual Student',
     mode: 'Remote',
     company: 'Adler Werbegeschenke, Saarbrücken, Germany',
-    note: 'My internship partner throughout my college years, where I worked 20 hours per week during the academic term and 40 hours per week during internship periods. As part of the marketing team, I worked as an in-house designer on organic and paid social media ads, performance campaigns, and email marketing assets.',
+    note: 'My internship partner throughout my university years, where I worked 20 hours per week during the academic term and 40 hours per week during internship periods. As part of the marketing team, I worked as an in-house designer on organic and paid social media ads, performance campaigns, and email marketing assets.',
   },
 ];
 
