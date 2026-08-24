@@ -26,7 +26,8 @@ const meta = [
 ---
 
 <Base title={d.title} description={d.description}>
-  <article class="pt-28 sm:pt-36">
+  {/* data-zoom → app.js makes the cover + every body image open full size */}
+  <article class="pt-28 sm:pt-36" data-zoom>
     <header class="wrap">
       <a href="/#work" class="u-link text-soft hover:text-ink text-sm transition-colors" data-enter>
         ← All work
