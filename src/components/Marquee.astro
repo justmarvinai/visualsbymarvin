@@ -1,0 +1,52 @@
+---
+import Logo from './Logo.astro';
+
+/**
+ * MARQUEE BAND
+ * ------------------------------------------------------------
+ * Full-bleed scrolling strip, tilted a couple of degrees so it cuts
+ * across the page. Purely decorative → aria-hidden, and it holds
+ * still for anyone who asked for reduced motion.
+ *
+ * ✏️ EDIT HERE: the words in `items`, or pass your own:
+ *      <Marquee items={['One', 'Two']} tilt="1.5deg" />
+ */
+interface Props {
+  items?: string[];
+  /** Rotation of the whole band. Use a negative value to tilt the other way. */
+  tilt?: string;
+  /** Seconds for one full loop — bigger is slower. */
+  speed?: number;
+  class?: string;
+}
+
+const {
+  items = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows', 'Brand Visuals'],
+  tilt = '-2deg',
+  speed = 38,
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class:list={['marquee', className]}
+  style={`--tilt:${tilt};--marquee-dur:${speed}s`}
+  aria-hidden="true"
+>
+  <div class="marquee-track">
+    {
+      /* the run is rendered twice; the track scrolls exactly one run
+         width, so the loop is seamless */
+      [0, 1].map(() => (
+        <div class="marquee-run">
+          {items.map((item) => (
+            <>
+              <span>{item}</span>
+              <Logo class="marquee-star size-[0.62em] shrink-0" />
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
