@@ -165,39 +165,41 @@ Then connect your domain in the host's dashboard and update `site` in `astro.con
 
 ## Sidequests & the Duolingo streak
 
-The Sidequests section lives in `src/data/sidequests.ts`.
+The section lives in `src/data/sidequests.ts`; the widget itself is
+`src/components/DuoStreak.astro`.
 
-**Manual (default).** Set `duolingo.streak` to your current streak. While it
-is `0` the card is left out of the page entirely, so a placeholder number can
-never ship by accident.
+### The streak number
 
-```ts
-export const duolingo = {
-  username: '',
-  streak: 214,        // ← your real number
-  language: 'Japanese',
-};
-```
+**Live (recommended).** Set `DUOLINGO_USERNAME` to your Duolingo profile
+name — on Vercel under **Settings → Environment Variables**, and locally in a
+`.env` file (copy `.env.example`; `.env` is gitignored).
+
+The name is read *only while the site builds*. It is deliberately not
+prefixed with `PUBLIC_`, so Astro keeps it server-side: **your username never
+reaches the browser, the built HTML, or this public repo** — only the streak
+number does. The card links to `duolingo.com`, not to `/profile/<name>`, for
+the same reason.
+
+Because it resolves at build time there is no CORS problem and visitors pay
+nothing for it. The number refreshes whenever the site rebuilds; pushing a
+commit does that, and a [Vercel Deploy Hook](https://vercel.com/docs/deploy-hooks)
+called once a day from a cron job keeps it current on its own.
+
+**Manual.** Leave `DUOLINGO_USERNAME` unset and put your number in
+`duolingo.streak` instead. This is also the fallback whenever Duolingo does
+not answer — offline, rate limited, profile private, response shape changed.
+Every one of those paths returns `null` and drops back to the manual number,
+so a bad response can never break the build.
+
+While the resolved streak is `0` the widget is left out of the page entirely,
+so a placeholder number can never ship by accident.
 
 ### Duo the mascot
 
 Drop an image at **`src/assets/duo.png`** (`.webp`, `.svg` and `.jpg` also
-work) and Duo appears peeking out beside the streak number. That is the only
-step — nothing to import or configure.
+work) and Duo appears standing on the green button. That is the only step —
+nothing to import or configure.
 
-While the file is missing the widget just renders without him, so the build
-never breaks over a missing mascot.
-
-**Live.** Fill in `username` with your public Duolingo profile name and the
-streak is fetched from Duolingo while the site builds — no CORS, no extra
-request for visitors, the number is baked straight into the HTML. `streak`
-stays as the fallback for when the fetch does not come back.
-
-Because it is read at build time, the number refreshes when the site
-rebuilds. Pushing a commit rebuilds it; to keep it current on its own, add a
-[Vercel Deploy Hook](https://vercel.com/docs/deploy-hooks) and call it once a
-day from a cron job.
-
-Every failure path (offline, rate limit, private profile, changed response
-shape) returns `null` and falls back to the manual number, so a bad response
-can't break the build.
+It is resolved with `import.meta.glob`, which returns nothing when the file
+is absent, so a missing mascot renders the widget without him rather than
+breaking the build.

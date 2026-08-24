@@ -14,14 +14,31 @@
  *   • `quests` — the other sidequest cards.
  */
 
+/**
+ * Duolingo username — read from the environment, never written here.
+ *
+ * This repo is public, so the name must not live in the source. Set
+ * `DUOLINGO_USERNAME` in Vercel → Settings → Environment Variables (and
+ * in a local `.env`, which is gitignored). It is read while the site
+ * builds and is NOT prefixed with `PUBLIC_`, so Astro keeps it
+ * server-side: the built pages carry the streak number and nothing else.
+ *
+ * process.env covers Vercel/shell; import.meta.env covers a local .env.
+ */
+const username =
+  (typeof process !== 'undefined' ? process.env?.DUOLINGO_USERNAME : undefined) ||
+  import.meta.env.DUOLINGO_USERNAME ||
+  '';
+
 export const duolingo = {
-  /** Public Duolingo profile name. Empty = use the number below. */
-  username: '',
-  /** ✏️ Your current streak in days. 0 hides the card. */
+  username,
+  /** ✏️ Manual fallback, in days. 0 hides the card. Used when the
+   *  username is unset or Duolingo does not answer. */
   streak: 0,
   /** Shown in the widget header next to the flag. */
   language: 'Japanese',
-  /** Where the card links to. */
+  /** Deliberately the plain homepage — a /profile/<name> link would put
+   *  the username straight back into the public HTML. */
   profileUrl: 'https://www.duolingo.com/',
 };
 
