@@ -32,6 +32,7 @@ npm run preview # preview the production build
 | **Dark mode colors** | `src/styles/global.css` (the `:root[data-theme='dark']` block right below `@theme`) |
 | Footer / CTA texts | `src/components/Footer.astro` |
 | Imprint (Impressum) | `src/pages/imprint.astro` |
+| Privacy policy (Datenschutzerklärung) | `src/pages/privacy.astro` |
 | Animations | `src/scripts/app.js` |
 | Domain for SEO tags | `astro.config.mjs` → `site` |
 
@@ -101,7 +102,7 @@ The four demo projects (Conjure, TrialMatch, Epoch, Bionova) are placeholders �
 - [ ] Replace the 4 demo projects with real work
 - [ ] Fill in `src/data/experience.ts` (everything in `[brackets]`)
 - [ ] Check email + add social links in `src/data/site.ts`
-- [ ] Fill in your address in `src/pages/imprint.astro` (**legally required in Germany**)
+- [ ] Add your phone number in `src/pages/imprint.astro` and `src/pages/privacy.astro` (both still say `[Telefonnummer]`)
 - [ ] Set your real domain in `astro.config.mjs`
 - [ ] Optional: swap `public/og.jpg` for a designed share image
 
