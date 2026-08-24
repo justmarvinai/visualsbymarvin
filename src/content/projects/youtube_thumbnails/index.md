@@ -10,12 +10,18 @@ coverAlt: 'Preview of past Thumbnails'
 order: 1
 ---
 
-Conjure is a concept app that lets people bring their ideas to life with local makers. I designed the full flow — onboarding, browsing and checkout — and kept it deliberately simple for first-time users.
+## Thumbnails (Tech/IRL)
 
-![App screens of Conjure](./01.jpg)
+Below are a few selected thumbnails I’ve created over the past months and years. Most were made for my own projects or as fictional concepts.
 
-## What I focused on
+I create my thumbnails using Adobe Photoshop and Figma, with ChatGPT and Gemini helping with refinements. My main focus is on YouTube thumbnails for gaming, tech, and IRL content.
 
-A friendly, bold visual language and a checkout that never feels overwhelming. Most decisions came straight out of user interviews.
+![Thumbnail Preview IRL_1](./01.jpg)
+![Thumbnail Preview IRL_2](./02.jpg)
+![Thumbnail Preview IRL_3](./05.jpg)
 
-![Final UI details](./02.jpg)
+## Thumbnails (Gaming)
+
+![Thumbnail Preview Gaming_1](./03.jpg)
+![Thumbnail Preview Gaming_2](./04.jpg)
+![Thumbnail Preview Gaming_4](./06.jpg)

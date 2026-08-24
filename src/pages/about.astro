@@ -6,13 +6,7 @@ import { site } from '../data/site';
 import { experience, education, type Station } from '../data/experience';
 import photo from '../assets/image_pill_me.png';
 
-/**
- * ✏️ EDIT HERE:
- *  - Bio texts: directly below in the markup
- *  - Experience / Education entries: src/data/experience.ts
- *  - "What I do" chips: the `doing` array below
- */
-const doing = ['Product Design', 'Ad Design', 'Branding', 'Social Media', 'AI Workflows'];
+const doing = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows'];
 ---
 
 <Base title="About me" description={`About ${site.name} — ${site.role} from ${site.location}.`}>
@@ -62,18 +56,22 @@ const doing = ['Product Design', 'Ad Design', 'Branding', 'Social Media', 'AI Wo
 
       <div>
         <p class="display text-[clamp(1.35rem,2.6vw,1.8rem)] leading-snug font-semibold tracking-[-0.02em]" data-reveal>
-          I design bold, clear visuals — landing pages, brands and small products that feel alive
-          and actually <span class="text-lime-ink">work</span>.
+          I design digital graphics for Meta (Facebook, Instagram), Google, E-Mail-Campaigns & Your in-house website,
+          which simply <span class="text-lime-ink">work</span>.
         </p>
         <div class="text-ink/75 mt-6 max-w-xl space-y-4 leading-relaxed" data-reveal>
           <p>
-            I'm a junior creative designer from {site.location}. I care about honest typography,
-            strong layouts and the small details that make a design feel considered — and I'm not
-            afraid to throw a first idea away when a better one shows up.
+            I’m a junior creative designer from {site.location}. I graduated with a B.A. in Media Design
+            in March 2026 and have been working for a business gifts company since then. I'm also a huge
+            nerd for Gaming & Anime/Manga. If you don't see me building my next design I probably replay
+            my favorite game right now.
+
+            I care about the brands and people I work with, and I adapt my designs to fit their visual identity.
+            I always put my full effort into every project.
           </p>
           <p>
-            Right now I'm looking for a team where I can learn fast, take responsibility early and
-            ship real work. If that sounds like you, my inbox is open.
+            Right now, I’m looking for a team where I can learn quickly, take on responsibility early, ship real work,
+            and continue improving my digital design skills. If that sounds like you, my inbox is open.
           </p>
         </div>
         <ul class="mt-8 flex flex-wrap gap-2.5" data-reveal>
