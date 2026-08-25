@@ -10,6 +10,26 @@ const doing = ['Ad Design', 'Social Media', 'Game Design', 'AI Workflows'];
 
 /** 'On-site' → 'mode-onsite' */
 const modeClass = (mode: string) => `mode mode-${mode.toLowerCase().replace(/[^a-z]/g, '')}`;
+
+/**
+ * CV download — optional.
+ * ✏️ Drop your PDF at `src/assets/cv.pdf` and the button appears. Astro
+ * fingerprints and serves it. import.meta.glob returns nothing when the
+ * file is absent, so a missing CV renders no button rather than shipping
+ * a link that 404s on a recruiter.
+ */
+const cvFiles = import.meta.glob('../assets/cv.pdf', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+const cvUrl = Object.values(cvFiles)[0] as string | undefined;
+if (!cvUrl) {
+  console.warn(
+    '\n  ⚠  No CV found — the "Download CV" button is hidden.\n' +
+      '     Drop your PDF at src/assets/cv.pdf and rebuild.\n'
+  );
+}
 ---
 
 <Base title="About me" description={`About ${site.name} — ${site.role} from ${site.location}.`}>
@@ -49,12 +69,22 @@ const modeClass = (mode: string) => `mode mode-${mode.toLowerCase().replace(/[^a
             </div>
           ))
         }
-        <a href={`mailto:${site.email}`} class="btn mt-2">
-          Get in touch
-          <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M4 12L12 4M12 4H5.5M12 4v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </a>
+        {
+          cvUrl && (
+            <a href={cvUrl} download={`${site.name} — CV.pdf`} class="btn btn-dl mt-2">
+              Download CV
+              <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M8 2.5v7m0 0 3-3m-3 3-3-3M3 13h10"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          )
+        }
       </aside>
 
       <div>

@@ -39,13 +39,15 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft && d
     </div>
 
     <h1 class="display mt-8 leading-[1.06] font-bold sm:mt-10">
-      <span class="mask">
-        <span class="mi gate-mi block text-[clamp(3.3rem,11vw,6.5rem)] tracking-[-0.04em]">
+      {/* the size lives on .mask, not .mi — .mask's em-based descender
+          padding has to resolve against the headline size, not 16px */}
+      <span class="mask text-[clamp(3.3rem,11vw,6.5rem)] tracking-[-0.04em]">
+        <span class="mi gate-mi block">
           I'm <span class="hl hl-lime">Marvin</span>
         </span>
       </span>
-      <span class="mask">
-        <span class="mi gate-mi block text-[clamp(1.7rem,5.5vw,3.3rem)] font-semibold tracking-[-0.03em]">
+      <span class="mask text-[clamp(1.7rem,5.5vw,3.3rem)] font-semibold tracking-[-0.03em]">
+        <span class="mi gate-mi block">
           Your <span class="hl hl-sky">Creative</span> Designer
         </span>
       </span>

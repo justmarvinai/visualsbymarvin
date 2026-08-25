@@ -6,13 +6,8 @@ const year = new Date().getFullYear();
 const socials = site.socials.filter((s) => s.url);
 ---
 
-<footer class="bg-panel text-panel-fg relative mt-28 overflow-hidden rounded-t-[28px] sm:mt-40 sm:rounded-t-[44px]" id="contact">
+<footer class="bg-panel text-panel-fg relative mt-28 overflow-hidden rounded-t-[28px] sm:mt-40 sm:rounded-t-[44px]">
   <div class="wrap pt-20 pb-16 text-center sm:pt-28">
-    <p class="text-lime flex items-center justify-center gap-2 text-sm font-medium" data-reveal>
-      <Logo class="size-3.5" />
-      We are a match? Awesome! Contact me.
-    </p>
-
     <h2
       class="display mt-6 text-[clamp(2.6rem,7vw,5.5rem)] leading-[0.98] tracking-[-0.035em]"
       data-mask
@@ -22,12 +17,6 @@ const socials = site.socials.filter((s) => s.url);
     </h2>
 
     <div class="mt-10 flex flex-col items-center gap-5 sm:mt-12" data-reveal>
-      <a href={`mailto:${site.email}`} class="btn btn-light btn-lg magnetic">
-        {site.email}
-        <svg class="arr size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M4 12L12 4M12 4H5.5M12 4v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </a>
       {
         socials.length > 0 && (
           <ul class="text-panel-fg/60 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">

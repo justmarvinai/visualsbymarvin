@@ -1,6 +1,5 @@
 ---
 import Logo from './Logo.astro';
-import { site } from '../data/site';
 
 const path = Astro.url.pathname;
 const links = [
@@ -35,11 +34,5 @@ const links = [
         </a>
       ))
     }
-    <a href={`mailto:${site.email}`} class="btn magnetic ml-1">
-      Let's talk
-      <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M4 12L12 4M12 4H5.5M12 4v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </a>
   </nav>
 </div>

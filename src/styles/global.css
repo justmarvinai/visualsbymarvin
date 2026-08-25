@@ -154,7 +154,8 @@ img {
    ============================================================ */
 
 html.js:not(.booted) .gate-mi {
-  transform: translateY(115%);
+  /* clears the taller clip box above */
+  transform: translateY(140%);
 }
 html.js:not(.booted) [data-enter] {
   opacity: 0;
@@ -201,6 +202,15 @@ html.js:not(.booted) [data-cover] {
 .mask {
   display: block;
   overflow: hidden;
+  /* Descenders (g, y, p) hang below the line box, and `overflow: hidden`
+     was cutting them off. Give the clip box room for them and take the
+     same amount straight back, so the headline keeps its exact size and
+     line spacing — only the clipping region grows.
+     NOTE: this is em-based, so whichever element carries .mask must also
+     carry the font-size. Put the size on the heading or on .mask itself,
+     never on the inner .mi, or this resolves against 16px. */
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
 }
 .mask .mi {
   display: block;
@@ -920,7 +930,8 @@ html.js .hl.is-drawn::before {
 }
 @keyframes marquee-scroll {
   to {
-    transform: translateX(-50%);
+    /* exactly one run — set per instance from the copy count */
+    transform: translateX(var(--marquee-shift, -50%));
   }
 }
 .marquee:hover .marquee-track {
@@ -1418,4 +1429,10 @@ html.js .hl.is-drawn::before {
   .duo-flame {
     animation: none;
   }
+}
+
+/* download button — the arrow drops instead of flying off diagonally.
+   Declared after `.btn:hover .arr` so it wins on equal specificity. */
+.btn-dl:hover .arr {
+  transform: translateY(2px);
 }

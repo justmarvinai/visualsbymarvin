@@ -32,6 +32,7 @@ npm run preview # preview the production build
 | Scrolling marquee words | `src/components/Marquee.astro` |
 | Spinning sticker on the hero pill | `src/components/StickerBadge.astro` |
 | Duolingo streak widget | `src/components/DuoStreak.astro` |
+| **Your CV** (Download button on /about/) | drop a PDF at `src/assets/cv.pdf` |
 | **Colors & fonts** (light mode) | `src/styles/global.css` (the `@theme` block at the top) |
 | **Accent colours** (lime / violet / coral / sky) | `src/styles/global.css` — the `accent family` block |
 | **Dark mode colors** | `src/styles/global.css` (the `:root[data-theme='dark']` block right below `@theme`) |
@@ -105,6 +106,7 @@ The four demo projects (Conjure, TrialMatch, Epoch, Bionova) are placeholders �
 ## Before you go live — checklist
 
 - [ ] Replace the 4 demo projects with real work
+- [ ] Drop your CV at `src/assets/cv.pdf` — **the Download CV button stays hidden until you do**, so no broken link ever reaches a recruiter (the build prints a warning to remind you)
 - [ ] Fill in `src/data/experience.ts` (everything in `[brackets]`)
 - [ ] Check email + add social links in `src/data/site.ts`
 - [ ] Optional: add a phone number to `src/pages/imprint.astro` (e-mail alone satisfies § 5 DDG, so this is not required)
