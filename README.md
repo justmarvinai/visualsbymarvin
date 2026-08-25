@@ -107,7 +107,8 @@ The four demo projects (Conjure, TrialMatch, Epoch, Bionova) are placeholders �
 - [ ] Replace the 4 demo projects with real work
 - [ ] Fill in `src/data/experience.ts` (everything in `[brackets]`)
 - [ ] Check email + add social links in `src/data/site.ts`
-- [ ] Add your phone number in `src/pages/imprint.astro` and `src/pages/privacy.astro` (both still say `[Telefonnummer]`)
+- [ ] Optional: add a phone number to `src/pages/imprint.astro` (e-mail alone satisfies § 5 DDG, so this is not required)
+- [ ] Have the Impressum + Datenschutzerklärung checked by a lawyer before going live — especially whether the `c/o Online-Impressum` address counts as a *ladungsfähige Anschrift* for your setup
 - [ ] Put your Duolingo streak in `src/data/sidequests.ts` — **while it is `0` the card stays hidden**, so nothing invented ever goes live
 - [ ] Set your real domain in `astro.config.mjs`
 - [ ] Optional: swap `public/og.jpg` for a designed share image
