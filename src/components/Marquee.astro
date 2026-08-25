@@ -26,6 +26,17 @@ const {
   speed = 38,
   class: className = '',
 } = Astro.props;
+
+/**
+ * The track scrolls left by exactly one run, so the remaining (REPEATS - 1)
+ * runs have to be wider than the band or the tail end runs dry — which is
+ * what happened with only two copies: one run of these five words measures
+ * ~1240px, while the band is 108vw (over 3700px on a 3440px display).
+ *
+ * Six copies cover a band of ~6200px (a 5K display) with this word list, and
+ * a shorter list gets proportionally more copies.
+ */
+const REPEATS = Math.max(6, Math.ceil(30 / Math.max(items.length, 1)));
 ---
 
 <div
@@ -33,11 +44,10 @@ const {
   style={`--tilt:${tilt};--marquee-dur:${speed}s`}
   aria-hidden="true"
 >
-  <div class="marquee-track">
+  <div class="marquee-track" style={`--marquee-shift:-${(100 / REPEATS).toFixed(4)}%`}>
     {
-      /* the run is rendered twice; the track scrolls exactly one run
-         width, so the loop is seamless */
-      [0, 1].map(() => (
+      /* one run scrolls past per loop; the rest keep the band filled */
+      Array.from({ length: REPEATS }).map(() => (
         <div class="marquee-run">
           {items.map((item) => (
             <>

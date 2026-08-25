@@ -11,7 +11,7 @@ export const site = {
   role: 'Creative Designer',
   location: 'Germany',
 
-  /** Contact email — used for every "Let's talk" button */
+  /** Contact email — used in the Impressum (legally required there) */
   email: 'm.gehlen26@gmail.com',
 
   /** Browser tab + search engine description */

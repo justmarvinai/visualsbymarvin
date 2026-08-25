@@ -215,7 +215,7 @@ function entrance(firstVisit) {
     }
     // y:0 clears the px offset gsap parses from the CSS gate transform,
     // otherwise it stays as a residual translate after yPercent animates
-    gsap.set(masks, { y: 0, yPercent: 115 });
+    gsap.set(masks, { y: 0, yPercent: 140 });
     gsap.set(enters, { y: 26, opacity: 0 });
     // yPercent (not y) so the JS cursor-parallax can add y in px later
     gsap.set(floats, { yPercent: 40, opacity: 0, scale: 0.85 });
@@ -242,7 +242,7 @@ function entrance(firstVisit) {
   } else {
     // soft entrance on internal navigation (view transition already fades)
     if (masks.length)
-      tl.fromTo(masks, { y: 0, yPercent: 115 }, { yPercent: 0, duration: 0.9, stagger: 0.09 }, 0);
+      tl.fromTo(masks, { y: 0, yPercent: 140 }, { yPercent: 0, duration: 0.9, stagger: 0.09 }, 0);
     if (cover)
       tl.fromTo(
         cover,
@@ -287,7 +287,7 @@ function initMasks() {
     if (!lines.length) return;
     gsap.fromTo(
       lines,
-      { y: 0, yPercent: 115 },
+      { y: 0, yPercent: 140 },
       {
         yPercent: 0,
         duration: 1.1,

@@ -8,5 +8,11 @@ export default defineConfig({
   site: 'https://visualsbymarvin.com',
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // Keep the CV a real downloadable file. Vite inlines assets under
+      // ~4kB as data: URIs, which breaks `download` in some browsers —
+      // opt PDFs out so behaviour never depends on file size.
+      assetsInlineLimit: (file) => (file.endsWith('.pdf') ? false : undefined),
+    },
   },
 });
