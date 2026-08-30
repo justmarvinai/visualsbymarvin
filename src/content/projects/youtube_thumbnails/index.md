@@ -23,5 +23,6 @@ I create my thumbnails using Adobe Photoshop and Figma, with ChatGPT and Gemini 
 ## Thumbnails (Gaming)
 
 ![Thumbnail Preview Gaming_1](./03.jpg)
+![Thumbnail Preview Gaming_1](./03_1.jpg)
 ![Thumbnail Preview Gaming_2](./04.jpg)
 ![Thumbnail Preview Gaming_4](./06.jpg)
