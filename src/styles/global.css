@@ -22,7 +22,7 @@
      Four supporting hues so the site can be colourful without losing
      lime as the brand. `-ink` = the readable-on-paper version, used for
      text and icons; the plain token is the fill/blob version. Project
-     cards, sidequests and stickers cycle through these. */
+     cards and sidequests cycle through these. */
   --color-violet: #a78bfa;
   --color-violet-ink: #6d28d9;
   --color-coral: #fda4af;
@@ -838,8 +838,8 @@ html.theme-anim *::after {
 /* ============================================================
    PLAYFUL KIT
    ------------------------------------------------------------
-   The pieces that give the site its personality: the marquee band,
-   the spinning sticker, highlighter marks and the sidequest cards.
+   The pieces that give the site its personality: the highlighter
+   marks and the sidequest cards.
    ============================================================ */
 
 /* ----- marker swash under a word -----
@@ -895,94 +895,6 @@ html.js .hl.is-drawn::before {
 }
 .hl-sky {
   --hl: var(--color-sky);
-}
-
-/* ----- marquee band ----- */
-.marquee {
-  position: relative;
-  overflow: hidden;
-  width: 108vw;
-  margin-inline: -4vw;
-  rotate: var(--tilt, -2deg);
-  background: var(--color-lime);
-  color: var(--color-on-lime);
-  padding-block: 0.7rem;
-  box-shadow: var(--shadow-chip);
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll var(--marquee-dur, 38s) linear infinite;
-}
-.marquee-run {
-  display: flex;
-  align-items: center;
-  gap: clamp(1.25rem, 3vw, 2.25rem);
-  padding-right: clamp(1.25rem, 3vw, 2.25rem);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.05rem, 2.6vw, 1.6rem);
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-}
-.marquee-star {
-  opacity: 0.55;
-}
-@keyframes marquee-scroll {
-  to {
-    /* exactly one run — set per instance from the copy count */
-    transform: translateX(var(--marquee-shift, -50%));
-  }
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
-/* ----- spinning sticker ----- */
-.sticker {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: clamp(84px, 13vw, 112px);
-  aspect-ratio: 1;
-  border-radius: 999px;
-  background: var(--color-ink);
-  color: var(--color-paper);
-  box-shadow: var(--shadow-pill);
-}
-.sticker-ring {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  animation: sticker-spin 18s linear infinite;
-}
-.sticker-text {
-  fill: currentColor;
-  font-family: var(--font-sans);
-  font-size: 8.4px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.sticker-core {
-  position: relative;
-  color: var(--color-lime);
-}
-@keyframes sticker-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sticker-ring {
-    animation: none;
-  }
 }
 
 /* ----- sidequest cards ----- */
@@ -1226,14 +1138,7 @@ html.js .hl.is-drawn::before {
   color: #141413;
 }
 
-/* the marquee breaks out of .wrap and must never cause a sideways scroll */
-.marquee-bleed {
-  position: relative;
-  overflow: hidden;
-  padding-block: 1.1rem;
-}
-
-/* hero pill + its sticker */
+/* hero pill — leans toward the cursor */
 .hero-pill-wrap {
   perspective: 900px;
 }
@@ -1241,19 +1146,6 @@ html.js .hl.is-drawn::before {
   transform-style: preserve-3d;
   will-change: transform;
 }
-.hero-sticker {
-  position: absolute;
-  right: -0.75rem;
-  bottom: -1.25rem;
-  z-index: 3;
-}
-@media (min-width: 640px) {
-  .hero-sticker {
-    right: -1.75rem;
-    bottom: -1.5rem;
-  }
-}
-
 /* oversized flame sitting in the corner of the streak card — pure
    decoration, so it carries no data and is hidden from readers */
 .quest-watermark {
