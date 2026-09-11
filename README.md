@@ -29,8 +29,6 @@ npm run preview # preview the production build
 | **My photo** | `src/assets/image_pill_me.png` (just replace the file) |
 | Floating tool icons + their positions | `src/components/Tools.astro` |
 | **Sidequests** (Duolingo streak, side projects) | `src/data/sidequests.ts` |
-| Scrolling marquee words | `src/components/Marquee.astro` |
-| Spinning sticker on the hero pill | `src/components/StickerBadge.astro` |
 | Duolingo streak widget | `src/components/DuoStreak.astro` |
 | **Your CV** (Download button on /about/) | drop a PDF at `src/assets/cv.pdf` |
 | **Colors & fonts** (light mode) | `src/styles/global.css` (the `@theme` block at the top) |
