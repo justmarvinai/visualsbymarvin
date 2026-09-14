@@ -59,7 +59,7 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft && d
 
   {/* ================= SELECTED WORK ================= */}
   <section id="work" class="wrap mt-20 scroll-mt-24 sm:mt-28">
-    <div class="text-soft mx-auto flex max-w-5xl items-center justify-between text-sm" data-reveal>
+    <div class="text-soft flex items-center justify-between text-sm" data-reveal>
       <p class="text-ink flex items-center gap-2 font-medium">
         <Logo class="text-lime-ink size-3.5" />
         Selected Work
@@ -67,7 +67,7 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft && d
       <p class="tabular-nums">(<span data-count-to={projects.length} data-count-pad="2">{String(projects.length).padStart(2, '0')}</span>)</p>
     </div>
 
-    <div class="mx-auto mt-8 grid max-w-5xl gap-x-10 gap-y-16 sm:mt-10 sm:gap-y-24 lg:grid-cols-2">
+    <div class="mt-8 grid gap-y-20 sm:mt-10 sm:gap-y-28">
       {projects.map((project, index) => <ProjectCard {project} {index} />)}
     </div>
   </section>
