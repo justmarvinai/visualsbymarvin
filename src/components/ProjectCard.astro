@@ -28,31 +28,37 @@ const accent = accents[index % accents.length];
         src={d.cover}
         alt={d.coverAlt ?? `Cover of ${d.title}`}
         widths={[480, 760, 1100, 1600]}
-        sizes="(min-width: 1024px) 44vw, 92vw"
-        loading={index < 2 ? 'eager' : 'lazy'}
+        sizes="(min-width: 1152px) 1088px, 92vw"
+        loading={index === 0 ? 'eager' : 'lazy'}
       />
     </div>
     <span class="pcard-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
   </div>
 
-  <div class="mt-6 sm:mt-7">
-    <h3 class="display text-[1.55rem] leading-tight font-bold tracking-tight sm:text-[1.8rem]">
-      {d.title}
-    </h3>
-    <p class="pcard-cats">
-      {d.categories.map((c) => <span>{c}</span>)}
-    </p>
-    <p class="text-ink/75 mt-3 max-w-md text-[15px] leading-relaxed">{d.description}</p>
-    <span class="btn pcard-btn mt-5" aria-hidden="true">
-      View Project
-      <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none">
-        <path
-          d="M4 12L12 4M12 4H5.5M12 4v6.5"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"></path>
-      </svg>
-    </span>
+  {/* full-width cards leave far too much empty space for a single text
+      column, so the title and the blurb sit side by side from md up */}
+  <div class="mt-6 grid gap-x-12 gap-y-4 sm:mt-8 md:grid-cols-[1fr_1fr] md:items-start">
+    <div>
+      <h3 class="display text-[1.6rem] leading-tight font-bold tracking-tight sm:text-[2.1rem]">
+        {d.title}
+      </h3>
+      <p class="pcard-cats">
+        {d.categories.map((c) => <span>{c}</span>)}
+      </p>
+    </div>
+    <div>
+      <p class="text-ink/75 text-[15px] leading-relaxed sm:text-base">{d.description}</p>
+      <span class="btn pcard-btn mt-5" aria-hidden="true">
+        View Project
+        <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M4 12L12 4M12 4H5.5M12 4v6.5"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </span>
+    </div>
   </div>
 </article>
