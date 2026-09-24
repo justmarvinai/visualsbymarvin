@@ -1,12 +1,12 @@
 ---
-title: 'YouTube Thumbnails'
-categories: ['YouTube', 'Social Media']
-description: 'YouTube Thumbnail Designs from my collection over the last time.'
+title: 'Amazon Listing Design - Telly'
+categories: ['Amazon', 'Shopify', 'Ebay']
+description: 'A complete Amazon listing design for the fictional brand “Telly,” which sells high-quality, eco-friendly, durable, and sturdy tote bags on Amazon.'
 year: '2026'
 role: 'Creative Design'
 tools: ['Figma', 'Photoshop', 'ChatGPT']
 cover: './cover.jpg'
-coverAlt: 'Preview of past Thumbnails'
+coverAlt: 'Cover of Telly Amazon Listing Design'
 order: 1
 ---
 
