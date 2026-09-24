@@ -15,8 +15,8 @@ An Amazon listing is a gallery of 6–8 product images on a product page, combin
 
 ## The Problem
 - The hero image of the gallery has to show the product in its best light and thats on a plain white background
-- A Amazon products images have to catch the users eye in an instant. There is so much competition for every product on Amazon, that yours have to be outstanding
-- The infographics have to invaluate doubts of purchasing: e.g. "is the quality even good?", "does the imprint last long?", "is there a color that I like?". If the customer is not feeling a benefit or a support of their believes through your product, you lose a potential customer
+- Amazon product images have to catch the user's eye instantly — there's so much competition that yours has to stand out.
+- The infographics have to resolve doubts before they turn into hesitation: e.g. "is the quality even good?", "does the imprint last long?", "is there a color that I like?". If the customer is not feeling a benefit or a support of their believes through your product, you lose a potential customer
 
 ## The Objectives
 - Show how the tote bag looks, highlight different colors, and compare the telly tote bag with other tote bags
@@ -26,7 +26,7 @@ An Amazon listing is a gallery of 6–8 product images on a product page, combin
 ## The Process
 
 ### 01 - Competition
-Most of the products shows when a customer is looking for "Jutebeutel" or "Baumwolltasche" are plain and simple - mostly multi-pack - tote bags. I've decided to create a design for "THE tote bag" not just "a tote bag". Because telly is not made to be one of many, it's meant to support the envoirment, be long-lasting and
+Most products that show up when searching for "Jutebeutel" or "Baumwolltasche" are plain and simple - mostly multi-pack - tote bags. I've decided to create a design for "THE tote bag" not just "a tote bag". Because telly is not made to be one of many, it's meant to support the environment, be long-lasting and
 offers a modern and timeless design, which you can even customize with a text of your own.
 
 That means I focused on presenting a ready made and printed tote bag instead of a plain nature color one in the hero image slot of the listing design.
