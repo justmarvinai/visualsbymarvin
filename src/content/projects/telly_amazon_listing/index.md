@@ -10,10 +10,8 @@ coverAlt: 'Cover of Telly Amazon Listing Design'
 order: 1
 ---
 
-# What is an Amazon Listing Design?
+## What is an Amazon Listing Design?
 An Amazon listing is a gallery of 6–8 product images on a product page, combining hero shots, infographics, and lifestyle photography to communicate a product's value and convince shoppers to buy. All within seconds of scrolling.
-
-# About the Project
 
 ## The Problem
 - The hero image of the gallery has to show the product in its best light and thats on a plain white background
