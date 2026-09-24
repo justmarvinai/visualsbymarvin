@@ -15,7 +15,7 @@ An Amazon listing is a gallery of 6–8 product images on a product page, combin
 
 ## The Problem
 - The hero image of the gallery has to show the product in its best light and thats on a plain white background
-- Amazon product images have to catch the user's eye instantly — there's so much competition that yours has to stand out.
+- Amazon product images have to catch the user's eye instantly. There's so much competition that yours has to stand out.
 - The infographics have to resolve doubts before they turn into hesitation: e.g. "is the quality even good?", "does the imprint last long?", "is there a color that I like?". If the customer is not feeling a benefit or a support of their believes through your product, you lose a potential customer
 
 ## The Objectives
