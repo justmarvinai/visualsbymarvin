@@ -47,9 +47,7 @@ export type Quest = {
   kicker: string;
   title: string;
   blurb: string;
-  /** Which accent from the palette this card wears */
-  accent: 'lime' | 'violet' | 'coral' | 'sky';
-  /** Little pills along the bottom */
+  /** Short keywords along the bottom */
   tags?: string[];
   link?: { href: string; label: string; external?: boolean };
 };
@@ -60,7 +58,6 @@ export const quests: Quest[] = [
     title: 'I built & shipped Jima',
     blurb:
       'An AI captions & motion studio I planned, designed and developed myself. Open source, free, and built so your files never leave your device.',
-    accent: 'violet',
     tags: ['Open source', 'Privacy-first', 'Figma → shipped'],
     link: { href: '/work/jima/', label: 'See how it was made' },
   },

@@ -1,0 +1,24 @@
+---
+/** The few line icons the site uses — all drawn on one 16px grid. */
+interface Props {
+  name: 'arrow-right' | 'arrow-left' | 'arrow-up-right' | 'download';
+  class?: string;
+}
+const { name, class: className = 'ico' } = Astro.props;
+
+const paths = {
+  'arrow-right': 'M2.5 8h11m0 0L9 3.5M13.5 8 9 12.5',
+  'arrow-left': 'M13.5 8h-11m0 0L7 3.5M2.5 8 7 12.5',
+  'arrow-up-right': 'M4.5 11.5 11.5 4.5m0 0H5.5m6 0v6',
+  download: 'M8 2.5v7m0 0 3-3m-3 3-3-3M3 13h10',
+};
+---
+
+<svg class={className} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path
+    d={paths[name]}
+    stroke="currentColor"
+    stroke-width="1.7"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

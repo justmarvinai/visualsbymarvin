@@ -1,202 +1,264 @@
 /* ============================================================
    GLOBAL STYLES — visualsbymarvin
    ------------------------------------------------------------
-   ✏️ EDIT HERE: colors + fonts of the whole site live in the
-   @theme block below (= LIGHT mode). The dark palette follows
-   right after it. Change --color-lime to re-brand the site.
-   Light mode is a true neutral white — if you want the page tinted
-   again, --color-paper is the single knob.
+   ✏️ EDIT HERE: the whole palette is the handful of tokens in
+   @theme below (= LIGHT mode) plus their dark twins right after.
+
+   The site is black & white on purpose — the work brings the
+   colour. --color-accent is the ONE signal colour: the CV button,
+   the full stops, the footer and every hover follow it. Swap that
+   single value to re-brand (e.g. #a3e635 for the old lime).
    ============================================================ */
 
-@import '@fontsource-variable/parkinsans';
-@import '@fontsource-variable/instrument-sans';
+/* Archivo, self-hosted (no request to Google). "standard" = the file
+   with both variable axes: weight 100–900 AND width 62–125%. The
+   width axis is what gives the headlines their stretched, poster feel. */
+@import '@fontsource-variable/archivo/standard.css';
 @import 'tailwindcss';
 
 @theme {
-  /* -------- brand colors (LIGHT mode) -------- */
-  --color-paper: #ffffff; /* page background — true white */
-  --color-ink: #101012; /* main text — neutral, not warm (flips to light in dark mode) */
-  --color-soft: #71717a; /* muted text */
-  --color-lime: #a3e635; /* signature accent — still the lead */
-  --color-lime-ink: #65a30d; /* accent for small text / icons */
+  /* -------- colours (LIGHT mode) -------- */
+  --color-paper: #ffffff; /* page background */
+  --color-ink: #0c0c0c; /* text + lines (flips to light in dark mode) */
+  --color-soft: #6b6b6b; /* secondary text — 5.3:1 on white */
+  --color-sunk: #f1f1ef; /* image placeholders while they load */
+  --color-accent: #ff4f00; /* the signal colour */
+  --color-on-accent: #0c0c0c; /* text ON the accent — dark in both modes (6:1) */
 
-  /* -------- accent family --------
-     Four supporting hues so the site can be colourful without losing
-     lime as the brand. `-ink` = the readable-on-paper version, used for
-     text and icons; the plain token is the fill/blob version. Project
-     cards and sidequests cycle through these. */
-  --color-violet: #a78bfa;
-  --color-violet-ink: #6d28d9;
-  --color-coral: #fda4af;
-  --color-coral-ink: #e11d48;
-  --color-sky: #7dd3fc;
-  --color-sky-ink: #0369a1;
-  --color-sun: #fcd34d;
-  --color-amber-ink: #b45309;
-  --color-on-lime: #141413; /* text on a lime background — dark in BOTH modes */
-  --color-card: #ffffff; /* tool chips, nav pill, toggles */
-  --color-panel: #141413; /* footer block */
-  --color-panel-fg: #f1f0ed; /* text inside the footer block */
+  /* -------- type -------- */
+  --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, Arial, sans-serif;
 
-  /* -------- fonts -------- */
-  --font-display: 'Parkinsans Variable', 'Parkinsans', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-
-  /* -------- misc -------- */
-  --shadow-chip:
-    inset 0 0 0 1px rgb(16 16 18 / 0.07), 0 1px 2px rgb(16 16 18 / 0.04),
-    0 10px 28px -14px rgb(16 16 18 / 0.2);
-  --shadow-pill:
-    inset 0 0 0 1px rgb(16 16 18 / 0.08), 0 2px 6px rgb(16 16 18 / 0.05),
-    0 18px 44px -18px rgb(16 16 18 / 0.3);
+  /* -------- motion -------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ------------------------------------------------------------
-   DARK MODE palette
-   Every token below overrides its light counterpart, so the
-   whole site (incl. Tailwind classes like `text-ink/75`) adapts.
+   DARK MODE palette — every token overrides its light twin, so
+   the whole site (incl. Tailwind classes like `text-ink/60`)
+   adapts. The accent stays the same: 5.9:1 on the dark page.
    ------------------------------------------------------------ */
 :root[data-theme='dark'] {
-  --color-paper: #0d0d0c;
-  --color-ink: #f1f0ed;
-  --color-soft: #8c8c85;
-  --color-lime: #a3e635;
-  --color-lime-ink: #a3e635; /* brighter, for contrast on dark */
-  /* accents keep their hue but brighten so they read on the dark page */
-  --color-violet: #c4b5fd;
-  --color-violet-ink: #c4b5fd;
-  --color-coral: #fda4af;
-  --color-coral-ink: #fda4af;
-  --color-sky: #7dd3fc;
-  --color-sky-ink: #38bdf8;
-  --color-sun: #fcd34d;
-  --color-amber-ink: #fbbf24;
-  --color-card: #1c1c1a;
-  --color-panel: #171715; /* footer sits slightly above the page */
-  --color-panel-fg: #f1f0ed;
-  --shadow-chip:
-    inset 0 0 0 1px rgb(241 240 237 / 0.08), 0 10px 28px -14px rgb(0 0 0 / 0.65);
-  --shadow-pill:
-    inset 0 0 0 1px rgb(241 240 237 / 0.1), 0 18px 44px -18px rgb(0 0 0 / 0.8);
+  --color-paper: #0c0c0c;
+  --color-ink: #f1f0ec;
+  --color-soft: #9b9b96;
+  --color-sunk: #181818;
   color-scheme: dark;
 }
 :root {
   color-scheme: light;
+  /* hairlines, derived from ink so they flip with the theme */
+  --line: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  --line-strong: color-mix(in srgb, var(--color-ink) 28%, transparent);
 }
 
 /* ============================================================
    BASE
    ============================================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-html {
-  scroll-behavior: smooth;
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
 }
 
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
 
-body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: clip;
+/* ============================================================
+   LAYOUT + TYPE PRIMITIVES
+   ============================================================ */
+@layer components {
+  /* page container */
+  .wrap {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 90rem;
+    padding-inline: clamp(1rem, 3.4vw, 3rem);
+  }
+
+  /* a size container, so headline sizes can be written in `cqi`
+     (% of the column width) and fill it exactly on every screen */
+  .cq {
+    container-type: inline-size;
+  }
+
+  /* the display voice: heavy, stretched, tight */
+  .display {
+    font-weight: 850;
+    font-stretch: 118%;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+  }
+
+  /* section headline — "Selected work." etc. Sized against the
+     column (cqi). On phones it runs larger, sized so the longest
+     single word ("Background.", 7.1em) still fits a 320px screen. */
+  .title-xl {
+    font-size: clamp(2.4rem, 13.4cqi, 10.5rem);
+  }
+  @media (min-width: 640px) {
+    .title-xl {
+      font-size: clamp(2.4rem, 11.4cqi, 10.5rem);
+    }
+  }
+
+  /* small running labels: stretched caps */
+  .label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-stretch: 118%;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  /* the orange full stop that ends every headline */
+  .dot {
+    color: var(--color-accent);
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* hairline rule — its own element so it can draw itself in */
+  .hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    background: var(--line);
+    transform-origin: 0 50%;
+  }
+  .hr-strong {
+    background: var(--color-ink);
+  }
+
+  /* skip link (a11y) */
+  .skip {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transform: translateY(-300%);
+    transition: transform 0.3s;
+  }
+  .skip:focus-visible {
+    transform: translateY(0);
+  }
 }
 
-::selection {
-  background: var(--color-lime);
-  color: var(--color-on-lime);
-}
+/* ============================================================
+   MASKED REVEALS
+   ============================================================ */
+@layer components {
+  /* block mask — one line (or one wrapped block) slides up out of it.
+     Descenders hang below the line box and `overflow: hidden` would cut
+     them, so the clip box gets room below and gives it straight back:
+     the headline keeps its exact size and spacing.
+     NOTE: em-based — the element carrying .mask must also carry the
+     font-size (the heading or .mask itself, never the inner .mi). */
+  .mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.24em;
+    margin-bottom: -0.24em;
+  }
+  .mask > .mi {
+    display: block;
+    will-change: transform;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-lime-ink);
-  outline-offset: 3px;
-  border-radius: 6px;
-}
-
-img {
-  -webkit-user-drag: none;
-  user-select: none;
-}
-
-/* layout container */
-.wrap {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 72rem;
-  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
-}
-
-/* display typography helper */
-.display {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-
-/* skip link (a11y) */
-.skip {
-  position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
-  z-index: 200;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  background: var(--color-ink);
-  color: var(--color-paper);
-  font-size: 0.85rem;
-  transform: translateY(-300%);
-  transition: transform 0.3s;
-}
-.skip:focus-visible {
-  transform: translateY(0);
+  /* word mask — the same idea, inline, so a headline can wrap
+     differently per breakpoint and still reveal word by word.
+     vertical-align: top keeps the line height exactly the heading's
+     (an overflow-hidden inline-block would otherwise sit its bottom
+     edge on the baseline and push the lines apart). */
+  .wm {
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    padding: 0.12em 0.04em 0.24em;
+    margin: -0.12em -0.04em -0.24em;
+  }
+  .wm > .mi {
+    display: inline-block;
+    will-change: transform;
+  }
 }
 
 /* ============================================================
    ANIMATION INITIAL STATES
-   (only applied when JS is on — page stays visible without JS)
+   Only while JS is on and the load timeline hasn't run — the page
+   is fully visible without JS.
    ============================================================ */
-
 html.js:not(.booted) .gate-mi {
-  /* clears the taller clip box above */
   transform: translateY(140%);
 }
 html.js:not(.booted) [data-enter] {
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(24px);
+}
+html.js:not(.booted) [data-rule] {
+  transform: scaleX(0);
 }
 html.js:not(.booted) .hero-pill {
   clip-path: inset(0% 50% 0% 50% round 999px);
 }
-html.js:not(.booted) .hero-pill-img {
-  transform: scale(1.35);
+html.js:not(.booted) .hero-pill img {
+  transform: scale(1.4);
 }
-html.js:not(.booted) .tool-float {
-  opacity: 0;
-  transform: translateY(40%) scale(0.85);
-}
-html.js:not(.booted) .navpill {
-  opacity: 0;
-  transform: translateY(120%);
-}
-html.js:not(.booted) .topbar {
+/* the top bar fades in on the first load only — `is-nav` is set on
+   every client-side page change, so it never blinks between pages */
+html.js:not(.booted):not(.is-nav) .mast {
   opacity: 0;
 }
 html.js:not(.booted) [data-cover] {
-  clip-path: inset(12% 4% round 40px);
-  transform: translateY(40px);
+  clip-path: inset(10% 6% 10% 6%);
+}
+html.js:not(.booted) [data-cover='pill'] {
+  clip-path: inset(0% 50% 0% 50% round 999px);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html.js:not(.booted) .gate-mi,
   html.js:not(.booted) [data-enter],
+  html.js:not(.booted) [data-rule],
   html.js:not(.booted) .hero-pill,
-  html.js:not(.booted) .hero-pill-img,
-  html.js:not(.booted) .tool-float,
-  html.js:not(.booted) .navpill,
-  html.js:not(.booted) .topbar,
+  html.js:not(.booted) .hero-pill img,
+  html.js:not(.booted) .mast,
   html.js:not(.booted) [data-cover] {
     opacity: 1;
     transform: none;
@@ -204,129 +266,188 @@ html.js:not(.booted) [data-cover] {
   }
 }
 
-/* masked line reveals */
-.mask {
-  display: block;
-  overflow: hidden;
-  /* Descenders (g, y, p) hang below the line box, and `overflow: hidden`
-     was cutting them off. Give the clip box room for them and take the
-     same amount straight back, so the headline keeps its exact size and
-     line spacing — only the clipping region grows.
-     NOTE: this is em-based, so whichever element carries .mask must also
-     carry the font-size. Put the size on the heading or on .mask itself,
-     never on the inner .mi, or this resolves against 16px. */
-  padding-bottom: 0.24em;
-  margin-bottom: -0.24em;
-}
-.mask .mi {
-  display: block;
-  will-change: transform;
-}
-
 /* ============================================================
    COMPONENTS
    ============================================================ */
+@layer components {
+  /* ----- buttons (pills — the one rounded shape besides the portrait) ----- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    height: 2.75rem;
+    padding-inline: 1.2rem;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-size: 0.875rem;
+    font-weight: 650;
+    font-stretch: 110%;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .btn:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .btn-accent {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .btn-accent:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .btn-sm {
+    height: 2.125rem;
+    padding-inline: 0.95rem;
+    font-size: 0.8125rem;
+  }
+  .btn .ico {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  .btn:hover .ico-dl {
+    transform: translateY(2px);
+  }
+  .btn:hover .ico-go {
+    transform: translateX(3px);
+  }
 
-/* ----- buttons ----- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  background: var(--color-ink);
-  color: var(--color-paper);
-  padding: 0.6rem 1.2rem;
-  font-size: 0.875rem;
-  font-weight: 550;
-  line-height: 1;
-  white-space: nowrap;
-  transition:
-    background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn:hover {
-  background: var(--color-lime);
-  color: var(--color-on-lime);
-}
-.btn .arr {
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn:hover .arr {
-  transform: translate(2px, -2px);
-}
-/* light button — always sits on the dark footer panel */
-.btn-light {
-  background: var(--color-panel-fg);
-  color: var(--color-panel);
-}
-.btn-light:hover {
-  background: var(--color-lime);
-  color: var(--color-on-lime);
-}
-.btn-lg {
-  padding: 1rem 1.75rem;
-  font-size: 1.05rem;
-}
+  /* ----- text link with an arrow ----- */
+  .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 650;
+    font-stretch: 110%;
+  }
+  .go .ico {
+    width: 0.95em;
+    height: 0.95em;
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+  .go:hover .ico,
+  .group:hover .go .ico {
+    transform: translateX(4px);
+  }
 
-/* ----- segmented toggles in the top bar (scroll mode + theme) ----- */
+  /* ----- underline link ----- */
+  .u-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 1px;
+    transition: background-size 0.4s var(--ease-out-expo);
+  }
+  .u-link:hover,
+  .u-link[aria-current] {
+    background-size: 100% 1px;
+  }
+
+  /* ----- masthead ----- */
+  .wordmark {
+    font-weight: 800;
+    font-stretch: 118%;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .mast {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--color-paper);
+    transition:
+      transform 0.5s var(--ease-out-expo),
+      background-color 0.35s ease;
+  }
+  .mast::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 1px;
+    background: var(--line);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .mast.is-scrolled::after {
+    opacity: 1;
+  }
+  .mast.is-hidden {
+    transform: translateY(-101%);
+  }
+
+  /* ----- segmented toggles (scroll mode + theme) ----- */
+  .seg {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+  }
+  /* the sliding indicator */
+  .seg::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc(50% - 2px);
+    border-radius: 999px;
+    background: var(--color-ink);
+    transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  /* … slides right for the 2nd option of each toggle */
+  .seg[data-active='instant']::before,
+  :root[data-theme='dark'] .seg[data-seg='theme']::before {
+    transform: translateX(100%);
+  }
+  .seg button {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    color: var(--color-soft);
+    transition: color 0.3s;
+  }
+  .seg button svg {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+  /* the smallest phones need every pixel of the top bar */
+  @media (max-width: 399px) {
+    .seg button {
+      width: 1.6rem;
+    }
+  }
+  .seg button[aria-pressed='true'] {
+    color: var(--color-paper);
+  }
+  /* theme buttons colour themselves from the theme itself, so the
+     active icon is right on the very first paint (before JS runs) */
+  .seg[data-seg='theme'] button[data-theme-mode='light'],
+  :root[data-theme='dark'] .seg[data-seg='theme'] button[data-theme-mode='dark'] {
+    color: var(--color-paper);
+  }
+  :root[data-theme='dark'] .seg[data-seg='theme'] button[data-theme-mode='light'] {
+    color: var(--color-soft);
+  }
+}
 html:not(.js) .ctl {
   display: none; /* both toggles need JS — hide them without it */
-}
-.seg {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  padding: 3px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
-  background: color-mix(in srgb, var(--color-card) 60%, transparent);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-chip);
-  transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease;
-}
-/* the sliding indicator */
-.seg::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc(50% - 3px);
-  border-radius: 999px;
-  background: var(--color-ink);
-  transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
-}
-/* … slides right for the 2nd option of each toggle */
-.seg[data-active='instant']::before,
-:root[data-theme='dark'] .seg[data-seg='theme']::before {
-  transform: translateX(100%);
-}
-.seg button {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 0.4rem 0.7rem;
-  color: var(--color-soft);
-  transition: color 0.3s;
-}
-.seg button[aria-pressed='true'] {
-  color: var(--color-paper);
-}
-/* theme buttons colour themselves from the theme itself, so the active
-   icon is correct on the very first paint (no flash before JS runs) */
-.seg[data-seg='theme'] button[data-theme-mode='light'],
-:root[data-theme='dark'] .seg[data-seg='theme'] button[data-theme-mode='dark'] {
-  color: var(--color-paper);
-}
-:root[data-theme='dark'] .seg[data-seg='theme'] button[data-theme-mode='light'] {
-  color: var(--color-soft);
 }
 @media (prefers-reduced-motion: reduce) {
   .seg::before {
@@ -334,175 +455,313 @@ html:not(.js) .ctl {
   }
 }
 
-/* ----- underline link ----- */
-.u-link {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1.5px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding-bottom: 2px;
-}
-.u-link:hover {
-  background-size: 100% 1.5px;
-}
+/* ============================================================
+   HERO
+   ============================================================ */
+@layer components {
+  /* "Visuals [pill] that work." — sized in cqi so the longest line
+     fills the column exactly. Phones break it into three lines
+     (Visuals / [pill] that / work.), wider screens into two
+     (Visuals [pill] / that work.) — same words, same order. */
+  .hero-title {
+    font-size: 23.4cqi;
+  }
+  .hero-title .br-lg {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 16.5cqi;
+    }
+    .hero-title .br-sm {
+      display: none;
+    }
+    .hero-title .br-lg {
+      display: inline;
+    }
+  }
 
-/* ----- tool chips ----- */
-.tool-chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 18px;
-  background: var(--color-card);
-  box-shadow: var(--shadow-chip);
-  transition:
-    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.4s,
-    background-color 0.35s ease;
-}
-@media (min-width: 640px) {
-  .tool-chip {
-    width: 86px;
-    height: 86px;
-    border-radius: 26px;
+  /* the portrait pill, sitting in the line like a word: bottom on the
+     baseline, top on the cap height (Archivo caps are 0.69em) */
+  .hero-pill {
+    display: inline-block;
+    position: relative;
+    height: 0.69em;
+    aspect-ratio: 2.4;
+    border-radius: 999px;
+    overflow: hidden;
+    vertical-align: baseline;
+    background: var(--color-sunk);
+    /* matches a word space on either side */
+    margin-inline: 0.02em;
   }
-}
-.tool-chip:hover {
-  transform: translateY(-6px) rotate(-3deg);
-  box-shadow: var(--shadow-pill);
-}
-
-/* ----- floating tool icons around the hero title -----
-   Layer  (.hero-tools) : positions the icons  → parallax lives on .tool-float
-   Wrapper(.tool-float) : per-icon place + cursor drift (GSAP)
-   Bobber (.tool-bob)   : the endless gentle float (CSS)
-   Chip   (.tool-chip)  : the visual card + hover                            */
-.hero-tools {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 1.5rem;
-  z-index: 20;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  pointer-events: none; /* let clicks / text-selection pass through to the title */
-}
-.hero-tools .tool-chip {
-  width: 46px;
-  height: 46px;
-  border-radius: 15px;
-  pointer-events: auto;
-}
-.tool-bob {
-  animation: tool-bob var(--dur, 6s) ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
-  will-change: transform;
-}
-@keyframes tool-bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--rot, 0deg));
-  }
-  50% {
-    transform: translateY(var(--amp, -12px)) rotate(calc(var(--rot, 0deg) * -0.5));
-  }
-}
-@media (min-width: 768px) {
-  .hero-tools {
-    inset: 0; /* fill the hero so % positions map to the full height */
-    display: block;
-    gap: 0;
-  }
-  .tool-float {
+  .hero-pill img {
     position: absolute;
-    left: var(--dx);
-    top: var(--dy);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 52% 40%;
+    transition: transform 0.9s var(--ease-out-expo);
   }
-  .hero-tools .tool-chip {
-    width: 58px;
-    height: 58px;
-    border-radius: 18px;
+  .hero-pill:hover img {
+    transform: scale(1.08);
   }
 }
-@media (min-width: 1024px) {
-  .hero-tools .tool-chip {
-    width: 64px;
-    height: 64px;
-    border-radius: 20px;
+
+/* ============================================================
+   SPEC GRID — label / value pairs between hairlines
+   ============================================================ */
+@layer components {
+  .spec dt {
+    color: var(--color-soft);
+  }
+  .spec dd {
+    margin-top: 0.35rem;
+    font-size: 0.975rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .spec dd span {
+    display: block;
+    color: var(--color-soft);
+    font-weight: 450;
+  }
+}
+
+/* ============================================================
+   PROJECT PLATES (home) + CROP MARKS
+   ============================================================ */
+@layer components {
+  /* Printer's crop marks around an image — the work is presented
+     like a sheet that's ready for production.
+     One pseudo-element, eight 1px lines drawn as backgrounds:
+     for each corner a short horizontal and vertical stroke that
+     stop a small gap short of the image edge. */
+  .crop {
+    --cm-l: 8px; /* mark length */
+    --cm-g: 4px; /* gap to the image edge */
+    position: relative;
+  }
+  .crop::after {
+    --o: calc(var(--cm-l) + var(--cm-g));
+    --c: var(--color-ink);
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--o));
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--c) 0 0) left 0 top var(--o) / var(--cm-l) 1px,
+      linear-gradient(var(--c) 0 0) left var(--o) top 0 / 1px var(--cm-l),
+      linear-gradient(var(--c) 0 0) right 0 top var(--o) / var(--cm-l) 1px,
+      linear-gradient(var(--c) 0 0) right var(--o) top 0 / 1px var(--cm-l),
+      linear-gradient(var(--c) 0 0) left 0 bottom var(--o) / var(--cm-l) 1px,
+      linear-gradient(var(--c) 0 0) left var(--o) bottom 0 / 1px var(--cm-l),
+      linear-gradient(var(--c) 0 0) right 0 bottom var(--o) / var(--cm-l) 1px,
+      linear-gradient(var(--c) 0 0) right var(--o) bottom 0 / 1px var(--cm-l);
+    background-repeat: no-repeat;
+    transition:
+      opacity 0.6s ease,
+      inset 0.9s var(--ease-out-expo);
+  }
+  @media (min-width: 768px) {
+    .crop {
+      --cm-l: 16px;
+      --cm-g: 8px;
+    }
+  }
+  /* JS on: the marks snap in from further out once the image is in */
+  html.js .crop:not(.is-in)::after {
+    opacity: 0;
+    inset: calc(-1 * var(--o) - 14px);
+  }
+
+  .plate-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--color-sunk);
+  }
+  .plate-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform;
+  }
+
+  /* the title swings in a notch and picks up the accent full stop */
+  .plate-title {
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .plate:hover .plate-title {
+    transform: translateX(0.12em);
+  }
+  .plate-title .dot {
+    display: inline-block;
+    transform: scale(0);
+    transform-origin: 50% 80%;
+    transition: transform 0.45s var(--ease-out-expo);
+  }
+  .plate:hover .plate-title .dot {
+    transform: scale(1);
+  }
+  /* the arrow (a graphic, 3.3:1 is enough) takes the accent — the
+     words stay ink so they keep full text contrast */
+  .plate-cta .ico {
+    transition:
+      transform 0.4s var(--ease-out-expo),
+      color 0.3s ease;
+  }
+  .plate:hover .plate-cta .ico {
+    color: var(--color-accent);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tool-bob {
-    animation: none;
+  .crop::after,
+  .plate-title,
+  .plate-title .dot,
+  .hero-pill img {
+    transition: none;
   }
 }
 
-/* ----- project cards ----- */
-.card-img {
-  position: relative;
-  overflow: hidden;
-  border-radius: clamp(20px, 2.5vw, 28px);
-  background: color-mix(in srgb, var(--color-ink) 6%, transparent);
-}
-.card-img::after {
-  /* subtle inner border so light images keep an edge */
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-ink) 8%, transparent);
-  pointer-events: none;
-}
-.card-img img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  will-change: transform;
-  /* a 16:9 cover sits flush; the tiny baseline zoom + drift come from GSAP
-     (see initCards in app.js) and only crop ~2–3% so nothing important is cut */
-}
-
-/* ----- grain overlay ----- */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  /* light mode keeps only a whisper of texture — at 0.32 this read as
-     sandpaper over the page background */
-  opacity: 0.07;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.14'/%3E%3C/svg%3E");
-}
-:root[data-theme='dark'] .grain {
-  opacity: 0.16; /* noise reads much stronger on a dark page */
+/* ============================================================
+   TIMELINE ROWS (experience / education)
+   ============================================================ */
+@layer components {
+  /* work-mode marker — the fill of the dot IS the meaning:
+     ● Remote · ◐ Hybrid · ○ On-site */
+  .mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+  .mode::before {
+    content: '';
+    width: 0.62rem;
+    height: 0.62rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-accent);
+    background: var(--mode-fill, transparent);
+  }
+  .mode-remote {
+    --mode-fill: var(--color-accent);
+  }
+  .mode-hybrid {
+    --mode-fill: linear-gradient(90deg, var(--color-accent) 50%, transparent 50%);
+  }
+  .mode-onsite {
+    --mode-fill: transparent;
+  }
 }
 
-/* ----- theme-aware surfaces without their own transition ----- */
-body,
-footer,
-.navpill,
-.card-img {
-  transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease,
-    color 0.35s ease;
+/* ============================================================
+   SIDEQUEST CARD
+   ============================================================ */
+@layer components {
+  .quest {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: clamp(1.25rem, 2.6vw, 2rem);
+    border: 1px solid var(--line-strong);
+    transition: border-color 0.3s ease;
+  }
+  .quest:hover {
+    border-color: var(--color-ink);
+  }
+  .quest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
 }
 
-/* While switching themes, let every element crossfade its colours.
-   The class is added by JS for ~350ms only. `transition-property` is
-   limited to colours, so GSAP's transforms are never affected. */
+/* ============================================================
+   FOOTER — the one full colour field on the site
+   ============================================================ */
+@layer components {
+  .foot {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .foot :focus-visible {
+    outline-color: var(--color-on-accent);
+  }
+  .foot .btn {
+    background: var(--color-on-accent);
+    color: #fff;
+  }
+  .foot .btn:hover {
+    background: #fff;
+    color: var(--color-on-accent);
+  }
+  .foot .hr {
+    background: color-mix(in srgb, var(--color-on-accent) 22%, transparent);
+  }
+}
+
+/* ============================================================
+   NEXT-PROJECT BAND (project pages)
+   ============================================================ */
+@layer components {
+  .next {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* the accent floods up from the bottom edge on hover */
+  .next::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-accent);
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .next:hover::before,
+  .next:focus-visible::before {
+    transform: scaleY(1);
+  }
+  .next:hover,
+  .next:focus-visible {
+    color: var(--color-on-accent);
+  }
+  .next:hover .next-soft,
+  .next:focus-visible .next-soft {
+    color: var(--color-on-accent);
+  }
+  .next .ico {
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .next:hover .ico {
+    transform: translateX(0.25em);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .next::before,
+  .next .ico {
+    transition: none;
+  }
+}
+
+/* ----- theme crossfade -----
+   While switching themes every element crossfades its colours. The
+   class is on <html> for ~400ms only, and the property list is
+   colours only, so GSAP's transforms are never touched. */
 html.theme-anim *,
 html.theme-anim *::before,
 html.theme-anim *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow,
-    outline-color, opacity;
+  transition-property: background-color, border-color, color, fill, stroke, outline-color;
   transition-duration: 0.35s;
   transition-timing-function: ease;
 }
@@ -516,191 +775,186 @@ html.theme-anim *::after {
 
 /* ============================================================
    ARTICLE (markdown body of project pages)
+   ------------------------------------------------------------
+   Text sits in a readable column on the LEFT edge — the same edge
+   as the header and the cover — and image rows run full width.
    ============================================================ */
-
-/* Text sits in a readable column on the LEFT edge — same edge as the
-   header and the cover shot — instead of floating centred between the
-   wide image rows. */
-.article > * {
-  max-width: 42rem;
-}
-.article > :first-child {
-  margin-top: 0;
-}
-/* image rows run the full column width, flush with the cover above them */
-.article > p:has(> img) {
-  display: grid;
-  gap: clamp(0.75rem, 1.6vw, 1.25rem);
-  max-width: none;
-  margin-block: clamp(2.5rem, 5vw, 4rem);
-}
-/* a heading belongs to the images under it, not to the section above */
-.article h2 + p:has(> img),
-.article h3 + p:has(> img) {
-  margin-top: 1.5rem;
-}
-@media (min-width: 768px) {
-  /* several images written back-to-back become a 2-up gallery … */
-  .article > p:has(> img + img) {
-    grid-template-columns: 1fr 1fr;
+@layer components {
+  .article > * {
+    max-width: 44rem;
   }
-  /* … and an odd last one runs full width, so no half-empty row is left */
-  .article > p:has(> img + img) > img:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+  .article > :first-child {
+    margin-top: 0;
   }
-}
-.article p {
-  margin-block: 1.4rem;
-  font-size: 1.0625rem;
-  line-height: 1.8;
-  color: color-mix(in srgb, var(--color-ink) 78%, transparent);
-}
-.article h2,
-.article h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-block: 3.5rem 1rem;
-}
-.article h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-}
-.article h3 {
-  font-size: clamp(1.2rem, 2.2vw, 1.4rem);
-}
-.article ul,
-.article ol {
-  list-style: disc;
-  padding-left: 1.4rem;
-  color: color-mix(in srgb, var(--color-ink) 78%, transparent);
-  line-height: 1.8;
-}
-.article ol {
-  list-style: decimal;
-}
-.article a {
-  font-weight: 550;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--color-lime-ink);
-}
-.article strong {
-  font-weight: 650;
-}
-.article img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: clamp(18px, 2.5vw, 28px);
-  /* spacing comes from the grid row above, not from each image */
-  margin-block: 0;
-}
-.article blockquote {
-  border-left: 3px solid var(--color-lime);
-  padding-left: 1.25rem;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 550;
-  letter-spacing: -0.01em;
-}
-.article hr {
-  border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
-  margin-block: 3rem;
+  .article > p:has(> img) {
+    display: grid;
+    gap: clamp(0.75rem, 1.6vw, 1.25rem);
+    max-width: none;
+    margin-block: clamp(2.5rem, 5vw, 4rem);
+  }
+  /* a heading belongs to the images under it, not the section above */
+  .article h2 + p:has(> img),
+  .article h3 + p:has(> img) {
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    /* images written back-to-back become a 2-up gallery … */
+    .article > p:has(> img + img) {
+      grid-template-columns: 1fr 1fr;
+    }
+    /* … and an odd last one runs full width, so no half-empty row */
+    .article > p:has(> img + img) > img:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+  .article p {
+    margin-block: 1.25rem;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+  .article h2,
+  .article h3 {
+    color: var(--color-ink);
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-block: 4rem 1.1rem;
+  }
+  .article h2 {
+    font-size: clamp(1.75rem, 3.6vw, 2.6rem);
+  }
+  .article h3 {
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    margin-top: 2.5rem;
+  }
+  .article ul,
+  .article ol {
+    list-style: none;
+    padding-left: 0;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+    line-height: 1.7;
+  }
+  .article li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-block: 0.7rem;
+  }
+  /* short accent dash instead of a bullet */
+  .article ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.82em;
+    width: 0.8rem;
+    height: 2px;
+    background: var(--color-accent);
+  }
+  .article ol {
+    counter-reset: li;
+  }
+  .article ol > li::before {
+    counter-increment: li;
+    content: counter(li, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-size: 0.8em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .article a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-accent);
+  }
+  .article strong {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .article img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block: 0;
+    background: var(--color-sunk);
+  }
+  .article blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1.25rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .article hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin-block: 3rem;
+  }
 }
 
 /* ============================================================
    LEGAL PAGES (Impressum / Datenschutzerklärung)
-   Long-form legal copy — mirrors `.article` but tuned for the
-   dense heading hierarchy the eRecht24 documents use.
+   Long-form legal copy — tuned for the dense heading hierarchy
+   the eRecht24 documents use.
    ============================================================ */
-
-.legal {
-  color: color-mix(in srgb, var(--color-ink) 78%, transparent);
-  font-size: 1rem;
-  line-height: 1.75;
-}
-.legal > :first-child {
-  margin-top: 0;
-}
-.legal h2 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
-  letter-spacing: -0.02em;
-  color: var(--color-ink);
-  margin-block: 3rem 1rem;
-}
-.legal h3 {
-  font-size: 1.125rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  color: var(--color-ink);
-  margin-block: 2rem 0.6rem;
-}
-.legal h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-ink);
-  margin-block: 1.5rem 0.4rem;
-}
-.legal p {
-  margin-block: 1rem;
-}
-.legal ul {
-  list-style: disc;
-  padding-left: 1.35rem;
-  margin-block: 1rem;
-}
-.legal li {
-  margin-block: 0.5rem;
-}
-.legal a {
-  font-weight: 550;
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--color-lime-ink);
-  overflow-wrap: anywhere; /* the long third-party URLs must not blow out the column */
-}
-.legal a:hover {
-  text-decoration-color: currentColor;
-}
-
-/* ----- work-mode chip (About page timeline) -----
-   Sits with the period in the left rail, so the job title stays clean.
-   Colour comes from --mode-ink, set by the modifier class. */
-.mode {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 999px;
-  padding: 0.2rem 0.6rem 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  line-height: 1.5;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--mode-ink);
-  background: color-mix(in srgb, var(--mode-ink) 12%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mode-ink) 28%, transparent);
-}
-.mode::before {
-  content: '';
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 999px;
-  background: var(--mode-ink);
-}
-.mode-remote {
-  --mode-ink: var(--color-lime-ink);
-}
-.mode-hybrid {
-  --mode-ink: var(--color-amber-ink);
-}
-.mode-onsite {
-  --mode-ink: var(--color-sky-ink);
+@layer components {
+  .legal {
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .legal > :first-child {
+    margin-top: 0;
+  }
+  .legal h2 {
+    color: var(--color-ink);
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-block: 3.25rem 1rem;
+  }
+  .legal h3 {
+    color: var(--color-ink);
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-block: 2rem 0.6rem;
+  }
+  .legal h4 {
+    color: var(--color-ink);
+    font-size: 1rem;
+    font-weight: 650;
+    margin-block: 1.5rem 0.4rem;
+  }
+  .legal p {
+    margin-block: 1rem;
+  }
+  .legal ul {
+    list-style: disc;
+    padding-left: 1.35rem;
+    margin-block: 1rem;
+  }
+  .legal li {
+    margin-block: 0.5rem;
+  }
+  .legal a {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-accent);
+    overflow-wrap: anywhere; /* long URLs must not blow out the column */
+  }
+  .legal a:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
 /* ============================================================
@@ -709,13 +963,14 @@ html.theme-anim *::after {
    The overlay markup is built by app.js, so the affordance only
    appears when the viewer can actually open.
    ============================================================ */
-
 .zoomable {
   cursor: zoom-in;
-  transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: outline-color 0.3s ease;
+  outline: 2px solid transparent;
+  outline-offset: 0;
 }
 .zoomable:hover {
-  box-shadow: 0 0 0 2px var(--color-lime);
+  outline-color: var(--color-accent);
 }
 
 .lb {
@@ -726,8 +981,8 @@ html.theme-anim *::after {
   grid-template-rows: auto minmax(0, 1fr) auto;
   /* solid: a translucent field lets high-contrast page text ghost
      through, and a full-screen backdrop-filter is costly on phones */
-  background: #0a0a0c;
-  color: #f1f0ed;
+  background: #0a0a0a;
+  color: #f1f0ec;
   opacity: 0;
   transition: opacity 0.26s ease;
 }
@@ -756,14 +1011,14 @@ html.theme-anim *::after {
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
-  opacity: 0.6;
+  opacity: 0.65;
 }
 .lb-cap {
   flex: 1;
   min-width: 0;
   text-align: center;
   font-size: 0.85rem;
-  opacity: 0.7;
+  opacity: 0.72;
 }
 
 .lb-btn {
@@ -771,9 +1026,9 @@ html.theme-anim *::after {
   align-items: center;
   justify-content: center;
   height: 2.4rem;
-  padding-inline: 0.9rem;
+  padding-inline: 0.95rem;
   border-radius: 999px;
-  background: rgb(241 240 237 / 0.1);
+  background: rgb(241 240 236 / 0.1);
   font-size: 0.8rem;
   font-weight: 600;
   white-space: nowrap;
@@ -782,8 +1037,8 @@ html.theme-anim *::after {
     color 0.28s ease;
 }
 .lb-btn:hover {
-  background: var(--color-lime);
-  color: var(--color-on-lime);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 .lb-icon {
   width: 2.4rem;
@@ -797,8 +1052,8 @@ html.theme-anim *::after {
   display: none;
 }
 
-/* the scroll container: `margin: auto` centres the image while it fits
-   and resolves to 0 once it overflows, so nothing gets clipped at 1:1 */
+/* the scroll container: `margin: auto` centres the image while it
+   fits and resolves to 0 once it overflows, so 1:1 never clips */
 .lb-stage {
   display: flex;
   overflow: auto;
@@ -815,7 +1070,6 @@ html.theme-anim *::after {
   height: auto;
   max-width: min(100%, calc(100vw - 1.5rem));
   max-height: calc(100dvh - 9rem);
-  border-radius: 8px;
   cursor: zoom-in;
   opacity: 1;
   transition: opacity 0.2s ease;
@@ -828,7 +1082,6 @@ html.theme-anim *::after {
 .lb-stage.is-actual .lb-img {
   max-width: none;
   max-height: none;
-  border-radius: 0;
   cursor: grab;
 }
 .lb-stage.is-actual.is-panning .lb-img {
@@ -844,333 +1097,6 @@ html.theme-anim *::after {
 }
 
 /* ============================================================
-   PLAYFUL KIT
-   ------------------------------------------------------------
-   The pieces that give the site its personality: the highlighter
-   marks and the sidequest cards.
-   ============================================================ */
-
-/* ----- marker swash under a word -----
-   A stroke UNDER the word rather than a fill behind it: the text keeps
-   its own colour, so it stays readable in both themes (a pastel fill
-   behind light dark-mode text does not). Organic radius + a slight tilt
-   keep it hand-made. */
-.hl {
-  position: relative;
-  z-index: 0;
-  white-space: nowrap;
-}
-.hl::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  left: -0.09em;
-  right: -0.09em;
-  bottom: var(--hl-b, 0.055em);
-  height: var(--hl-h, 0.17em);
-  background: var(--hl, var(--color-lime));
-  border-radius: 0.5em 0.28em 0.42em 0.24em;
-  transform-origin: left center;
-  /* no JS → the stroke is simply already drawn */
-  transform: rotate(-0.9deg) scaleX(1);
-}
-html.js .hl::before {
-  transform: rotate(-0.9deg) scaleX(0);
-  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-}
-html.js .hl.is-drawn::before {
-  transform: rotate(-0.9deg) scaleX(1);
-}
-@media (prefers-reduced-motion: reduce) {
-  html.js .hl::before {
-    transform: rotate(-0.9deg) scaleX(1);
-    transition: none;
-  }
-}
-/* body-size text gets a chunkier stroke so it still reads as a mark */
-.hl-thick {
-  --hl-h: 0.4em;
-  --hl-b: 0.02em;
-}
-.hl-lime {
-  --hl: var(--color-lime);
-}
-.hl-violet {
-  --hl: var(--color-violet);
-}
-.hl-coral {
-  --hl: var(--color-coral);
-}
-.hl-sky {
-  --hl: var(--color-sky);
-}
-
-/* ----- sidequest cards ----- */
-.quest {
-  --quest-ink: var(--color-lime-ink);
-  --quest-fill: var(--color-lime);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: clamp(1.35rem, 3vw, 1.9rem);
-  border-radius: clamp(20px, 2.5vw, 28px);
-  background: color-mix(in srgb, var(--quest-fill) 16%, var(--color-card));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--quest-ink) 22%, transparent);
-  overflow: hidden;
-  transition:
-    transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
-    box-shadow 0.45s ease;
-}
-:root[data-theme='dark'] .quest {
-  background: color-mix(in srgb, var(--quest-fill) 12%, var(--color-card));
-}
-.quest:hover {
-  transform: translateY(-4px) rotate(-0.6deg);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--quest-ink) 40%, transparent),
-    var(--shadow-pill);
-}
-.quest-lime {
-  --quest-ink: var(--color-lime-ink);
-  --quest-fill: var(--color-lime);
-}
-.quest-violet {
-  --quest-ink: var(--color-violet-ink);
-  --quest-fill: var(--color-violet);
-}
-.quest-coral {
-  --quest-ink: var(--color-coral-ink);
-  --quest-fill: var(--color-coral);
-}
-.quest-sky {
-  --quest-ink: var(--color-sky-ink);
-  --quest-fill: var(--color-sky);
-}
-
-.quest-kicker {
-  color: var(--quest-ink);
-  font-size: 0.75rem;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.quest-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-top: 0.4rem;
-}
-.quest-blurb {
-  color: color-mix(in srgb, var(--color-ink) 75%, transparent);
-  font-size: 0.95rem;
-  line-height: 1.65;
-  margin-top: 0.5rem;
-  max-width: 34rem;
-}
-.quest-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.9rem;
-}
-.quest-tags li {
-  border-radius: 999px;
-  padding: 0.25rem 0.65rem;
-  background: color-mix(in srgb, var(--quest-ink) 12%, transparent);
-  color: var(--quest-ink);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-.quest-foot {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: auto;
-  padding-top: 1.1rem;
-  color: var(--quest-ink);
-  font-size: 0.85rem;
-  font-weight: 650;
-}
-.quest .arr {
-  transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-.quest:hover .arr {
-  transform: translate(3px, -3px);
-}
-
-/* the streak card */
-.quest-stat {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.6rem;
-}
-.quest-flame {
-  color: var(--quest-ink);
-  width: clamp(1.9rem, 4vw, 2.5rem);
-  flex-shrink: 0;
-  animation: flame-flicker 2.4s ease-in-out infinite;
-  transform-origin: bottom center;
-}
-@keyframes flame-flicker {
-  0%,
-  100% {
-    transform: scale(1) rotate(0deg);
-  }
-  35% {
-    transform: scale(1.07) rotate(-3deg);
-  }
-  70% {
-    transform: scale(0.97) rotate(2deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .quest-flame {
-    animation: none;
-  }
-}
-.quest-num {
-  font-family: var(--font-display);
-  font-size: clamp(3.2rem, 9vw, 4.6rem);
-  font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-  font-variant-numeric: tabular-nums;
-}
-.quest-unit {
-  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
-  font-size: 0.95rem;
-  font-weight: 550;
-  margin-top: 0.5rem;
-}
-
-/* ----- project cards ----- */
-.pcard {
-  --pc-ink: var(--color-lime-ink);
-  --pc-fill: var(--color-lime);
-}
-.pcard-lime {
-  --pc-ink: var(--color-lime-ink);
-  --pc-fill: var(--color-lime);
-}
-.pcard-violet {
-  --pc-ink: var(--color-violet-ink);
-  --pc-fill: var(--color-violet);
-}
-.pcard-coral {
-  --pc-ink: var(--color-coral-ink);
-  --pc-fill: var(--color-coral);
-}
-.pcard-sky {
-  --pc-ink: var(--color-sky-ink);
-  --pc-fill: var(--color-sky);
-}
-
-/* the frame carries the tilt + the colour pad that peeks out behind
-   the image on hover, so the card feels like a physical thing */
-.pcard-frame {
-  position: relative;
-  border-radius: clamp(20px, 2.5vw, 28px);
-  transition: transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1);
-}
-.pcard-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--pc-fill);
-  opacity: 0;
-  transform: rotate(0deg) scale(0.98);
-  transition:
-    transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1),
-    opacity 0.4s ease;
-}
-.pcard:hover .pcard-frame {
-  transform: translateY(-6px) rotate(-0.8deg);
-}
-.pcard:hover .pcard-frame::before {
-  opacity: 1;
-  transform: rotate(2.6deg) scale(1.015);
-}
-
-/* big index numeral, sitting on the corner of the image */
-.pcard-index {
-  position: absolute;
-  top: 0.75rem;
-  left: 0.9rem;
-  z-index: 2;
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  display: grid;
-  place-items: center;
-  min-width: 2.1em;
-  padding: 0.22em 0.4em;
-  border-radius: 999px;
-  background: var(--color-card);
-  color: var(--pc-ink);
-  box-shadow: var(--shadow-chip);
-  transition: transform 0.5s cubic-bezier(0.34, 1.35, 0.64, 1);
-}
-.pcard:hover .pcard-index {
-  transform: translateY(-2px) rotate(-5deg) scale(1.06);
-}
-
-/* categories as little pills instead of a pipe-separated line */
-.pcard-cats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.6rem;
-}
-.pcard-cats span {
-  border-radius: 999px;
-  padding: 0.2rem 0.6rem;
-  background: color-mix(in srgb, var(--pc-ink) 13%, transparent);
-  color: var(--pc-ink);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-/* the button picks up the card's own accent rather than the global lime */
-.pcard:hover .pcard-btn {
-  background: var(--pc-fill);
-  color: var(--color-on-lime);
-}
-:root[data-theme='dark'] .pcard:hover .pcard-btn {
-  color: #141413;
-}
-
-/* hero pill — leans toward the cursor */
-.hero-pill-wrap {
-  perspective: 900px;
-}
-.hero-pill {
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-/* oversized flame sitting in the corner of the streak card — pure
-   decoration, so it carries no data and is hidden from readers */
-.quest-watermark {
-  position: absolute;
-  right: -1.6rem;
-  bottom: -2.2rem;
-  width: 9.5rem;
-  color: var(--quest-ink);
-  opacity: 0.11;
-  pointer-events: none;
-  transition: transform 0.6s cubic-bezier(0.34, 1.35, 0.64, 1);
-}
-.quest:hover .quest-watermark {
-  transform: rotate(-8deg) scale(1.06);
-}
-
-/* ============================================================
    DUOLINGO STREAK WIDGET
    ------------------------------------------------------------
    Deliberately keeps Duolingo's own light palette in BOTH themes
@@ -1178,9 +1104,7 @@ html.js .hl.is-drawn::before {
      green #58CC02 (edge #58A700) · flame #FF9600 / #FFC800
      text #4B4B4B · muted #AFAFAF · outline #E5E5E5
    ============================================================ */
-
 .duo {
-  height: 100%;
   --duo-green: #58cc02;
   --duo-green-edge: #58a700;
   --duo-ink: #4b4b4b;
@@ -1190,6 +1114,7 @@ html.js .hl.is-drawn::before {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
   padding: clamp(1.1rem, 2.4vw, 1.5rem);
   border-radius: 20px;
   border: 2px solid var(--duo-line);
@@ -1264,9 +1189,8 @@ html.js .hl.is-drawn::before {
 .duo-num {
   margin-top: 0.5rem;
   color: #ff9600;
-  font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 4.2rem);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
@@ -1329,10 +1253,4 @@ html.js .hl.is-drawn::before {
   .duo-flame {
     animation: none;
   }
-}
-
-/* download button — the arrow drops instead of flying off diagonally.
-   Declared after `.btn:hover .arr` so it wins on equal specificity. */
-.btn-dl:hover .arr {
-  transform: translateY(2px);
 }

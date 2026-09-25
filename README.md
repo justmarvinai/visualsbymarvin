@@ -1,8 +1,11 @@
-# visualsbymarvin ✳
+# visualsbymarvin
 
-Personal portfolio of **Marvin Gehlen — Creative Designer**.
+Personal portfolio of **Marvin Gehlen — Junior Marketing Designer**, made to be
+sent along with job applications: the first screen tells a recruiter who, what
+and where, the work follows in big plates, and the CV is one click away
+everywhere.
 
-Bold, minimal, highly animated. Built with [Astro 5](https://astro.build), [Tailwind CSS 4](https://tailwindcss.com), [GSAP](https://gsap.com) (motion) and [Lenis](https://lenis.darkroom.engineering) (smooth scroll). Fully static — deploys anywhere for free.
+Minimal, black & white with one signal colour, big stretched type. Built with [Astro 5](https://astro.build), [Tailwind CSS 4](https://tailwindcss.com), [GSAP](https://gsap.com) (motion) and [Lenis](https://lenis.darkroom.engineering) (smooth scroll). Fully static — deploys anywhere for free.
 
 ---
 
@@ -22,22 +25,24 @@ npm run preview # preview the production build
 | I want to change… | File |
 | --- | --- |
 | **My projects / case studies** | `src/content/projects/<project>/index.md` |
-| Name, **email**, socials, status badge | `src/data/site.ts` |
-| **Experience & education** (About page) | `src/data/experience.ts` |
-| Hero texts ("I'm Marvin", subline) | `src/pages/index.astro` |
-| About page bio texts | `src/pages/about.astro` |
+| Name, **email**, socials, status | `src/data/site.ts` |
+| **Experience & education** (home Profile + About) | `src/data/experience.ts` |
+| Degree, **focus** and **tools** lists | `src/data/profile.ts` |
+| Hero ("Visuals that work.", intro line, facts row) | `src/pages/index.astro` |
+| About page bio texts + quick facts | `src/pages/about.astro` |
 | **My photo** | `src/assets/image_pill_me.png` (just replace the file) |
-| Floating tool icons + their positions | `src/components/Tools.astro` |
+| **Your CV** (every "Download CV" button) | drop a PDF at `src/assets/cv.pdf` |
 | **Sidequests** (Duolingo streak, side projects) | `src/data/sidequests.ts` |
 | Duolingo streak widget | `src/components/DuoStreak.astro` |
-| **Your CV** (Download button on /about/) | drop a PDF at `src/assets/cv.pdf` |
-| **Colors & fonts** (light mode) | `src/styles/global.css` (the `@theme` block at the top) |
-| **Accent colours** (lime / violet / coral / sky) | `src/styles/global.css` — the `accent family` block |
-| **Dark mode colors** | `src/styles/global.css` (the `:root[data-theme='dark']` block right below `@theme`) |
-| Footer / CTA texts | `src/components/Footer.astro` |
+| Top bar (name, nav, toggles) | `src/components/Masthead.astro` |
+| Footer closing line ("Thanks for your time.") | `src/components/Footer.astro` |
+| **Colours & font** (light mode) | `src/styles/global.css` (the `@theme` block at the top) |
+| **The accent colour** (orange) | `src/styles/global.css` → `--color-accent` — one value |
+| **Dark mode colours** | `src/styles/global.css` (the `:root[data-theme='dark']` block right below `@theme`) |
 | Imprint (Impressum) | `src/pages/imprint.astro` |
 | Privacy policy (Datenschutzerklärung) | `src/pages/privacy.astro` |
 | Animations | `src/scripts/app.js` |
+| Share image (link previews) | `public/og.jpg` |
 | Domain for SEO tags | `astro.config.mjs` → `site` |
 
 Files with editable content have a `✏️ EDIT HERE` comment at the top.
@@ -88,25 +93,27 @@ Only write text for the really important stuff — the images do the talking.
 
 That's the whole system: **images with a few short sentences in between.** Every image you reference gets optimized automatically (WebP, responsive sizes).
 
-**Cover images:** use a **16:9** ratio — **1600 × 900 px** is ideal (a YouTube-thumbnail export drops straight in). The card preview shows the whole cover with only a tiny (~3%) trim at the edges, so keep important text a little away from the very border. Inside-the-page images (the `![](...)` ones) can be any size — they show at full width, uncropped.
+**Cover images:** use a **16:9** ratio — **1920 × 1080 px** is ideal. On the home page the cover runs the full width of the page inside printer's crop marks, with only a tiny (~4%) trim at the edges for the scroll drift, so keep important text a little away from the very border. Inside-the-page images (the `![](...)` ones) can be any size — they show at full width, uncropped, and open full size on click.
 
-The four demo projects (Conjure, TrialMatch, Epoch, Bionova) are placeholders — replace them with your real work.
+A title typed as `Something - Else` is shown with a proper dash (`Something – Else`).
+
+**Epoch** and **Bionova** are still the template's demo projects — replace them with your own work or set `draft: true` to hide them.
 
 ---
 
 ## Your photos
 
-- `src/assets/image_pill_me.png` — used in the hero pill **and** on the About page. Replace it with any wide image (~1400×450, the pill shape is baked in / cropped by the container).
-- `public/og.jpg` — the preview image shown when you share your link (1200×630).
+- `src/assets/image_pill_me.png` — the portrait. On the home page it sits **inside the headline** as a pill (cropped to 2.4 : 1 around the middle, so keep yourself centred); on the About page it runs full width in its own pill shape. Replace it with any wide image (~1400×450).
+- `public/og.jpg` — the preview image shown when you share your link (1200×630). It's a render of the hero; swap it if you change the headline.
 
 ---
 
 ## Before you go live — checklist
 
-- [ ] Replace the 4 demo projects with real work
-- [ ] Drop your CV at `src/assets/cv.pdf` — **the Download CV button stays hidden until you do**, so no broken link ever reaches a recruiter (the build prints a warning to remind you)
-- [ ] Fill in `src/data/experience.ts` (everything in `[brackets]`)
-- [ ] Check email + add social links in `src/data/site.ts`
+- [ ] Replace the 2 remaining demo projects (Epoch, Bionova) with real work
+- [ ] Drop your CV at `src/assets/cv.pdf` — **every Download CV button stays hidden until you do**, so no broken link ever reaches a recruiter (the build prints a warning to remind you)
+- [ ] Check `src/data/site.ts` — `role` and `description` (browser tab + search results) still say *Creative Designer* while the hero and About say *Marketing Designer*
+- [ ] Check email + social links in `src/data/site.ts`
 - [ ] Optional: add a phone number to `src/pages/imprint.astro` (e-mail alone satisfies § 5 DDG, so this is not required)
 - [ ] Have the Impressum + Datenschutzerklärung checked by a lawyer before going live — especially whether the `c/o Online-Impressum` address counts as a *ladungsfähige Anschrift* for your setup
 - [ ] Put your Duolingo streak in `src/data/sidequests.ts` — **while it is `0` the card stays hidden**, so nothing invented ever goes live
@@ -122,21 +129,23 @@ All motion lives in `src/scripts/app.js` and is driven by small `data-` attribut
 | Attribute / class | Effect |
 | --- | --- |
 | `data-enter` | fades up as part of the page-load choreography |
+| `data-rule` | a hairline (`<hr class="hr">`) that draws itself in on page load |
+| `.gate-mi` | a masked word/line that rises as part of the page load |
 | `data-reveal` | fades up when scrolled into view |
-| `data-mask` + `.mask > .mi` spans | masked line reveal (text slides out of a clipped box) |
-| `data-cover` | big image clip-reveal on page load |
-| `data-card` / `data-card-img` | project card reveal + parallax + hover zoom |
-| `data-parallax` | gentle vertical parallax |
-| `.magnetic` | element sticks slightly to the cursor |
-| `.hero-tools` / `.tool-float` | tool icons that float around the hero title (bob + cursor parallax) |
+| `data-mask` + `.mask > .mi` spans | masked line reveal on scroll (text slides out of a clipped box) |
+| `data-cover` | big image clip-reveal on page load (`data-cover="pill"` opens from the middle like the hero pill) |
+| `data-card` | project plate: rule draws, title rises, cover wipes up, crop marks snap in, then a gentle drift + hover zoom |
+| `.crop` | printer's crop marks around whatever it wraps |
+| `data-zoom` | images inside open full size in the lightbox |
+| `data-count-to` | a number counts up when it scrolls into view |
+| `data-time` | live clock (German time) |
 
-The floating hero icons orbit the title on desktop/tablet and fall back to a
-tidy row under the subtext on phones. Reposition or restyle them in
-`src/components/Tools.astro` (each icon's `dx`/`dy` = desktop position).
+The top bar slides away while you scroll down and comes back as soon as you
+scroll up.
 
 Smooth scrolling and all animations automatically switch off for users with `prefers-reduced-motion`, and the site is fully readable with JavaScript disabled.
 
-The **Smooth / Instant toggle** in the top bar lets any visitor turn the eased (Lenis) scrolling off in favour of native instant scrolling; the choice is remembered in their browser (`localStorage`). Default is smooth, or instant when the OS requests reduced motion.
+The **Smooth / Instant toggle** in the top bar (desktop only — touch scrolling is always native) lets any visitor turn the eased (Lenis) scrolling off in favour of native instant scrolling; the choice is remembered in their browser (`localStorage`). Default is smooth, or instant when the OS requests reduced motion.
 
 The **Light / Dark toggle** sits next to it. The theme is applied before the page paints (so there is never a flash of the wrong theme) and is remembered in `localStorage`. Visitors who haven't chosen follow their operating system setting.
 
@@ -144,12 +153,16 @@ Both palettes are plain CSS variables, so the whole site — including Tailwind 
 
 | Token | Use for |
 | --- | --- |
-| `paper` / `ink` | page background / main text (they swap in dark mode) |
+| `paper` / `ink` | page background / main text + lines (they swap in dark mode) |
 | `soft` | muted secondary text |
-| `lime` / `lime-ink` | the accent (big text / small text & icons) |
-| `on-lime` | text placed **on** a lime background (stays dark in both modes) |
-| `card` | raised surfaces: tool chips, nav pill, toggles |
-| `panel` / `panel-fg` | the dark footer block and its text |
+| `sunk` | image placeholders while they load |
+| `accent` | the signal colour: full stops, CV button, footer, hovers — as a fill or for big type only (3.3 : 1 on white, too light for small text) |
+| `on-accent` | text placed **on** the accent (stays dark in both modes) |
+
+The type is **Archivo** (self-hosted, no request to Google) with both of its
+variable axes: weight for the heavy headlines and *width* (`font-stretch`) for
+their stretched look. `.display` is the headline voice, `.label` the small
+stretched caps.
 
 ---
 

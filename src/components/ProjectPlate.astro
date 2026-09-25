@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { dash } from '../utils/typo';
+
+/**
+ * One project on the home page: a full-width "plate" — number, big
+ * title and year on a rule, the cover inside printer's crop marks,
+ * then the facts a recruiter scans for.
+ */
+interface Props {
+  project: CollectionEntry<'projects'>;
+  index: number;
+  total: number;
+}
+const { project, index, total } = Astro.props;
+const d = project.data;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<article class="plate group relative" data-card>
+  {/* stretched link — the whole plate is clickable */}
+  <a href={`/work/${project.id}/`} class="absolute inset-0 z-10" aria-label={`View case study: ${d.title}`}></a>
+
+  <hr class="hr hr-strong" data-rule />
+
+  <header
+    class="grid grid-cols-[1fr_auto] items-start gap-x-6 gap-y-3 pt-4 sm:pt-5 md:grid-cols-[5.5rem_1fr_auto]"
+    data-plate-head
+  >
+    <p class="label num col-span-2 md:col-span-1 md:pt-[0.35em]">
+      {pad(index + 1)}<span class="text-soft"> / {pad(total)}</span>
+    </p>
+    <h3 class="plate-title display text-[clamp(2.1rem,6.4cqi,5.75rem)] leading-[0.95] text-balance">
+      {dash(d.title)}<span class="dot" aria-hidden="true">.</span>
+    </h3>
+    {d.year && <p class="label num pt-[0.35em] text-right">{d.year}</p>}
+  </header>
+
+  <div class="crop mt-6 sm:mt-8">
+    <div class="plate-media" data-card-img>
+      <Image
+        src={d.cover}
+        alt={d.coverAlt ?? `Cover of ${d.title}`}
+        widths={[480, 760, 1100, 1600, 2000]}
+        sizes="(min-width: 1440px) 1344px, 94vw"
+        loading={index === 0 ? 'eager' : 'lazy'}
+      />
+    </div>
+  </div>
+
+  <div
+    class="mt-5 grid gap-x-6 gap-y-3 sm:mt-6 md:grid-cols-[5.5rem_1fr] lg:grid-cols-[5.5rem_minmax(0,1fr)_minmax(0,1.35fr)_auto]"
+    data-plate-foot
+  >
+    <p class="label text-soft md:col-start-2 lg:col-start-2 lg:pt-1">{d.categories.join(' / ')}</p>
+    <p class="text-ink/80 max-w-xl text-[0.975rem] leading-relaxed md:col-start-2 lg:col-start-3">
+      {d.description}
+    </p>
+    <p class="md:col-start-2 lg:col-start-4 lg:text-right">
+      <span class="go plate-cta text-[0.95rem]">
+        View case study
+        <Icon name="arrow-right" class="ico" />
+      </span>
+    </p>
+  </div>
+</article>

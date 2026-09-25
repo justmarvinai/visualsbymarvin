@@ -6,17 +6,17 @@
  *
  * Hooks you can use in any .astro file:
  *   data-enter            → animates in on page load (staggered)
+ *   data-rule             → hairline that draws itself in on page load
  *   data-reveal           → fades/slides up when scrolled into view
  *   data-mask   + .mask/.mi → masked line reveal on scroll
- *   data-card / data-card-img → project card reveal + parallax + hover zoom
- *   data-parallax         → gentle vertical parallax while scrolling
+ *   .gate-mi              → masked word/line revealed by the load timeline
+ *   data-card             → project plate: rule, title, cover reveal +
+ *     data-card-img         parallax + hover zoom (crop marks snap in)
  *   data-cover            → big cover image clip reveal on page load
- *   .magnetic             → element gently sticks to the cursor
- *   .gate-mi              → masked line revealed by the load timeline
+ *                           (data-cover="pill" opens like the hero pill)
  *   data-zoom             → images inside open full size in the lightbox
  *   data-count-to         → number counts up to that value in view
- *   data-pill-tilt        → element tilts in 3D toward the cursor
- *   .hl                   → highlighter mark that draws itself on
+ *   data-time             → live clock (Europe/Berlin)
  */
 
 import gsap from 'gsap';
@@ -34,6 +34,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 let lenis = null;
 let pageCtl = null; // aborts per-page listeners on navigation
+let firstLoad = true; // the full load choreography runs once per visit
 
 /* ============================================================
    SMOOTH SCROLL — lifecycle + user toggle
@@ -69,7 +70,7 @@ function applyTheme(next, persist) {
   }
   html.dataset.theme = theme;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0d0d0c' : '#f1f0ed');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0c0c0c' : '#ffffff');
   $$('[data-theme-mode]').forEach((b) =>
     b.setAttribute('aria-pressed', b.dataset.themeMode === theme ? 'true' : 'false')
   );
@@ -155,9 +156,12 @@ document.addEventListener('astro:before-swap', () => {
 document.addEventListener('astro:after-swap', () => {
   // Astro resets <html>'s classes to the server-rendered set on every swap,
   // dropping the classes our client code owns. Re-apply them before paint so
-  // e.g. the scroll toggle (gated on `.js`) stays visible on every page.
+  // e.g. the toggles (gated on `.js`) stay visible on every page. `booted` is
+  // left off on purpose: the new page stays hidden behind the CSS gate until
+  // its own entrance has set the start states. `is-nav` exempts the top bar
+  // from that gate, so it stays put while the page underneath changes.
   const cl = document.documentElement.classList;
-  cl.add('js');
+  cl.add('js', 'is-nav');
   if (lenis) cl.add('lenis', 'lenis-smooth');
   document.documentElement.dataset.theme = theme; // attributes are reset too
   // keep Lenis in sync with the scroll position Astro restored
@@ -176,19 +180,16 @@ function initPage() {
 
   if (reduced) {
     html.classList.add('booted');
+    // no motion → everything simply sits in its final state
+    $$('.crop').forEach((c) => c.classList.add('is-in'));
     return;
   }
 
-  initMagnetic(signal);
-  initToolFloat(signal);
-  initPillTilt(signal);
-
-  entrance(!html.classList.contains('booted'));
+  initMast(signal);
+  entrance();
   initReveals();
   initMasks();
   initCards(signal);
-  initParallax();
-  initHighlights();
   initCounters();
 
   requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -196,70 +197,107 @@ function initPage() {
 
 /* ============================================================
    LOAD CHOREOGRAPHY
+   ------------------------------------------------------------
+   First visit: the rules draw, the headline rises word by word,
+   the portrait pill opens from a sliver. Later page changes get
+   a shorter version (the view transition already crossfades).
    ============================================================ */
-function entrance(firstVisit) {
-  const pill = $('.hero-pill');
-  const pillImg = $('.hero-pill-img');
-  const masks = $$('.gate-mi');
+function whenFontsReady(maxWait) {
+  if (!document.fonts?.ready) return Promise.resolve();
+  return Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, maxWait))]);
+}
+
+function entrance() {
+  const first = firstLoad;
+  firstLoad = false;
+
+  const mast = $('.mast');
+  const rules = $$('[data-rule]').filter((r) => !r.closest('[data-card]'));
+  const words = $$('.gate-mi');
   const enters = $$('[data-enter]');
-  const floats = $$('.tool-float');
+  const pill = $('.hero-pill');
+  const pillImg = pill && $('img', pill);
   const cover = $('[data-cover]');
+  const coverImg = cover && $('img', cover);
+  const isPill = cover?.dataset.cover === 'pill';
+  const crop = cover?.closest('.crop');
 
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+  const shut = isPill ? 'inset(0% 50% 0% 50% round 999px)' : 'inset(10% 6% 10% 6%)';
+  const open = isPill ? 'inset(0% 0% 0% 0% round 999px)' : 'inset(0% 0% 0% 0%)';
 
-  if (firstVisit) {
-    // explicitly set start states, then release the CSS gate
-    if (pill) {
-      gsap.set(pill, { clipPath: 'inset(0% 50% 0% 50% round 999px)' });
-      gsap.set(pillImg, { scale: 1.35 });
-    }
-    // y:0 clears the px offset gsap parses from the CSS gate transform,
-    // otherwise it stays as a residual translate after yPercent animates
-    gsap.set(masks, { y: 0, yPercent: 140 });
-    gsap.set(enters, { y: 26, opacity: 0 });
-    // yPercent (not y) so the JS cursor-parallax can add y in px later
-    gsap.set(floats, { yPercent: 40, opacity: 0, scale: 0.85 });
-    gsap.set('.navpill', { y: 110, opacity: 0 });
-    gsap.set('.topbar', { opacity: 0, y: -10 });
-    if (cover) gsap.set(cover, { clipPath: 'inset(12% 4% round 40px)', y: 40 });
-    html.classList.add('booted');
-
-    if (pill) {
-      tl.to(pill, { clipPath: 'inset(0% 0% 0% 0% round 999px)', duration: 1.25 }, 0.1);
-      tl.to(pillImg, { scale: 1, duration: 1.25 }, 0.1);
-    }
-    tl.to(masks, { yPercent: 0, duration: 1.15, stagger: 0.12 }, pill ? 0.35 : 0.15);
-    if (cover) tl.to(cover, { clipPath: 'inset(0% 0% round 28px)', y: 0, duration: 1.2 }, 0.5);
-    tl.to(enters, { y: 0, opacity: 1, duration: 0.9, stagger: 0.07 }, pill ? 0.65 : 0.4);
-    if (floats.length)
-      tl.to(
-        floats,
-        { yPercent: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.6)', stagger: 0.08 },
-        0.8
-      );
-    tl.to('.topbar', { opacity: 1, y: 0, duration: 0.8 }, 0.7);
-    tl.to('.navpill', { y: 0, opacity: 1, duration: 0.9 }, 0.95);
-  } else {
-    // soft entrance on internal navigation (view transition already fades)
-    if (masks.length)
-      tl.fromTo(masks, { y: 0, yPercent: 140 }, { yPercent: 0, duration: 0.9, stagger: 0.09 }, 0);
-    if (cover)
-      tl.fromTo(
-        cover,
-        { clipPath: 'inset(10% 3% round 36px)', y: 28 },
-        { clipPath: 'inset(0% 0% round 28px)', y: 0, duration: 0.9 },
-        0.1
-      );
-    if (enters.length)
-      tl.fromTo(enters, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.05 }, 0.1);
-    if (floats.length)
-      tl.fromTo(
-        floats,
-        { yPercent: 30, opacity: 0, scale: 0.9 },
-        { yPercent: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', stagger: 0.05 },
-        0.2
-      );
+  // explicit start states, then release the CSS gate
+  // (y:0 clears the px offset gsap parses from the CSS gate transform,
+  // otherwise it would stay as a residual translate under yPercent)
+  gsap.set(rules, { scaleX: 0, transformOrigin: '0% 50%' });
+  gsap.set(words, { y: 0, yPercent: 140 });
+  gsap.set(enters, { y: 24, opacity: 0 });
+  if (pill) {
+    gsap.set(pill, { clipPath: 'inset(0% 50% 0% 50% round 999px)' });
+    gsap.set(pillImg, { scale: 1.4 });
   }
+  if (cover) {
+    gsap.set(cover, { clipPath: shut });
+    if (coverImg && !isPill) gsap.set(coverImg, { scale: 1.18 });
+  }
+  if (first && mast) gsap.set(mast, { opacity: 0, y: -12 });
+  html.classList.add('booted');
+
+  const k = first ? 1 : 0.7; // later pages: same moves, quicker
+  const play = () => {
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    if (first && mast) tl.to(mast, { opacity: 1, y: 0, duration: 0.9, clearProps: 'transform' }, 0.1);
+    tl.to(rules, { scaleX: 1, duration: 1.4 * k, ease: 'expo.inOut' }, 0);
+    tl.to(words, { yPercent: 0, duration: 1.2 * k, stagger: 0.09 * k }, 0.2 * k);
+    if (pill) {
+      tl.to(pill, { clipPath: 'inset(0% 0% 0% 0% round 999px)', duration: 1.3 * k }, 0.5 * k);
+      // cleared at the end so the CSS hover zoom can take over
+      tl.to(pillImg, { scale: 1, duration: 1.6 * k, clearProps: 'transform' }, 0.5 * k);
+    }
+    if (cover) {
+      tl.to(cover, { clipPath: open, duration: 1.3 * k }, 0.45 * k);
+      if (coverImg && !isPill) tl.to(coverImg, { scale: 1, duration: 1.6 * k, clearProps: 'transform' }, 0.45 * k);
+      if (crop) tl.add(() => crop.classList.add('is-in'), 0.9 * k);
+    }
+    tl.to(enters, { y: 0, opacity: 1, duration: 0.9 * k, stagger: 0.07 * k, clearProps: 'transform' }, 0.55 * k);
+  };
+
+  // wait (briefly) for Archivo, so the headline never rises in a fallback font
+  if (first) whenFontsReady(800).then(play);
+  else play();
+}
+
+/* ============================================================
+   MASTHEAD — hides on the way down, returns on the way up
+   ============================================================ */
+function initMast(signal) {
+  const mast = $('.mast');
+  if (!mast) return;
+  let lastY = window.scrollY;
+  let queued = false;
+
+  const update = () => {
+    queued = false;
+    const y = Math.max(0, window.scrollY);
+    mast.classList.toggle('is-scrolled', y > 4);
+    const dy = y - lastY;
+    if (Math.abs(dy) < 6) return;
+    // never hide while something inside it has keyboard focus
+    const hide = dy > 0 && y > 240 && !mast.contains(document.activeElement);
+    mast.classList.toggle('is-hidden', hide);
+    lastY = y;
+  };
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true, signal }
+  );
+  mast.addEventListener('focusin', () => mast.classList.remove('is-hidden'), { signal });
+  update();
 }
 
 /* ============================================================
@@ -269,13 +307,14 @@ function initReveals() {
   $$('[data-reveal]').forEach((el) => {
     gsap.fromTo(
       el,
-      { y: 34, opacity: 0 },
+      { y: 30, opacity: 0 },
       {
         y: 0,
         opacity: 1,
         duration: 1,
         ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        clearProps: 'transform',
+        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
       }
     );
   });
@@ -290,152 +329,63 @@ function initMasks() {
       { y: 0, yPercent: 140 },
       {
         yPercent: 0,
-        duration: 1.1,
-        ease: 'power4.out',
+        duration: 1.2,
+        ease: 'expo.out',
         stagger: 0.1,
-        scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+        scrollTrigger: { trigger: group, start: 'top 88%', once: true },
       }
     );
   });
 }
 
 /* ============================================================
-   PROJECT CARDS — reveal, parallax, hover zoom
+   PROJECT PLATES — rule draws, title rises, the cover wipes up
+   inside its crop marks, then drifts gently while it scrolls by
    ============================================================ */
 function initCards(signal) {
   $$('[data-card]').forEach((card) => {
-    const wrap = $('[data-card-img]', card);
-    const img = wrap && $('img', wrap);
+    const rule = $('[data-rule]', card);
+    const head = $$('[data-plate-head] > *', card);
+    const foot = $('[data-plate-foot]', card);
+    const crop = $('.crop', card);
+    const media = $('[data-card-img]', card);
+    const img = media && $('img', media);
 
-    gsap.fromTo(
-      card,
-      { y: 56, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1.1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: card, start: 'top 90%', once: true },
-      }
-    );
+    const tl = gsap.timeline({
+      defaults: { ease: 'expo.out' },
+      scrollTrigger: { trigger: card, start: 'top 86%', once: true },
+    });
+    if (rule) tl.fromTo(rule, { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 1.3, ease: 'expo.inOut' }, 0);
+    if (head.length)
+      tl.fromTo(head, { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, stagger: 0.06 }, 0.1);
+    if (media) tl.fromTo(media, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4 }, 0.2);
+    if (img) tl.fromTo(img, { scale: 1.32 }, { scale: 1.08, duration: 1.8 }, 0.2);
+    if (crop) tl.add(() => crop.classList.add('is-in'), 0.75);
+    if (foot) tl.fromTo(foot, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 1, clearProps: 'transform' }, 0.5);
 
     if (!img) return;
 
-    // reveal zoom settles at a small baseline (1.06) that gives the drift
-    // just enough headroom — so a 16:9 cover is only cropped ~3% at rest
+    // gentle drift while the plate passes through the viewport — the
+    // 1.08 baseline scale gives it the headroom, so no edge ever shows
     gsap.fromTo(
       img,
-      { scale: 1.2 },
+      { yPercent: -3 },
       {
-        scale: 1.06,
-        duration: 1.5,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: card, start: 'top 90%', once: true },
-      }
-    );
-
-    // gentle parallax drift while the card passes through the viewport
-    gsap.fromTo(
-      img,
-      { yPercent: -2.2 },
-      {
-        yPercent: 2.2,
+        yPercent: 3,
         ease: 'none',
-        scrollTrigger: { trigger: wrap, start: 'top bottom', end: 'bottom top', scrub: true },
+        scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: true },
       }
     );
 
     if (finePointer) {
-      card.addEventListener(
-        'mouseenter',
-        () => gsap.to(img, { scale: 1.11, duration: 0.7, ease: 'power3.out' }),
-        { signal }
-      );
-      card.addEventListener(
-        'mouseleave',
-        () => gsap.to(img, { scale: 1.06, duration: 0.7, ease: 'power3.out' }),
-        { signal }
-      );
+      card.addEventListener('mouseenter', () => gsap.to(img, { scale: 1.12, duration: 0.8, ease: 'power3.out' }), {
+        signal,
+      });
+      card.addEventListener('mouseleave', () => gsap.to(img, { scale: 1.08, duration: 0.8, ease: 'power3.out' }), {
+        signal,
+      });
     }
   });
-}
-
-function initParallax() {
-  $$('[data-parallax]').forEach((el) => {
-    gsap.fromTo(
-      el,
-      { yPercent: -4 },
-      {
-        yPercent: 4,
-        ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
-      }
-    );
-  });
-}
-
-/* ============================================================
-   MAGNETIC BUTTONS
-   ============================================================ */
-function initMagnetic(signal) {
-  if (!finePointer) return;
-  $$('.magnetic').forEach((el) => {
-    const xTo = gsap.quickTo(el, 'x', { duration: 0.45, ease: 'power3' });
-    const yTo = gsap.quickTo(el, 'y', { duration: 0.45, ease: 'power3' });
-    el.addEventListener(
-      'pointermove',
-      (e) => {
-        const r = el.getBoundingClientRect();
-        xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
-        yTo((e.clientY - (r.top + r.height / 2)) * 0.4);
-      },
-      { signal }
-    );
-    el.addEventListener(
-      'pointerleave',
-      () => {
-        xTo(0);
-        yTo(0);
-      },
-      { signal }
-    );
-  });
-}
-
-/* ---- floating hero icons: gentle cursor parallax (desktop) ---- */
-function initToolFloat(signal) {
-  if (!finePointer) return;
-  const hero = $('.hero-sec');
-  const items = $$('.hero-tools .tool-float');
-  if (!hero || !items.length) return;
-
-  const movers = items.map((el, i) => ({
-    xTo: gsap.quickTo(el, 'x', { duration: 0.9, ease: 'power3' }),
-    yTo: gsap.quickTo(el, 'y', { duration: 0.9, ease: 'power3' }),
-    // alternate direction + vary strength so icons drift independently
-    depth: (i % 2 === 0 ? -1 : 1) * (0.6 + (i % 3) * 0.32),
-  }));
-  const clamp = (v) => Math.max(-0.6, Math.min(0.6, v));
-
-  hero.addEventListener(
-    'pointermove',
-    (e) => {
-      if (window.innerWidth < 768) return; // icons sit in a static row on phones
-      const r = hero.getBoundingClientRect();
-      const nx = clamp((e.clientX - (r.left + r.width / 2)) / r.width);
-      const ny = clamp((e.clientY - (r.top + r.height / 2)) / r.height);
-      movers.forEach((m) => {
-        m.xTo(nx * 48 * m.depth);
-        m.yTo(ny * 40 * m.depth);
-      });
-    },
-    { signal }
-  );
-  hero.addEventListener(
-    'pointerleave',
-    () => movers.forEach((m) => (m.xTo(0), m.yTo(0))),
-    { signal }
-  );
 }
 
 /* ============================================================
@@ -454,9 +404,11 @@ function initAnchors(signal) {
         const target = hash === 'top' ? 0 : document.getElementById(hash);
         if (target === null) return;
         e.preventDefault();
-        // smooth mode → eased Lenis scroll; instant/reduced → jump
+        // smooth mode → eased Lenis scroll (honouring the CSS scroll-margin);
+        // instant/reduced → jump
         if (lenis) {
-          lenis.scrollTo(target, { duration: 1.4 });
+          const margin = target === 0 ? 0 : parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+          lenis.scrollTo(target, { duration: 1.4, offset: -margin });
         } else if (target === 0) {
           window.scrollTo({ top: 0, behavior: 'instant' });
         } else {
@@ -481,14 +433,17 @@ function initScrollToggle(signal) {
 }
 
 function initClock(signal) {
-  const el = $('[data-time]');
-  if (!el) return;
+  const els = $$('[data-time]');
+  if (!els.length) return;
   const fmt = new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
     timeZone: 'Europe/Berlin',
   });
-  const tick = () => (el.textContent = fmt.format(new Date()));
+  const tick = () => {
+    const now = fmt.format(new Date());
+    els.forEach((el) => (el.textContent = now));
+  };
   tick();
   const id = setInterval(tick, 10_000);
   signal.addEventListener('abort', () => clearInterval(id));
@@ -739,13 +694,14 @@ function initLightbox(signal) {
   });
 }
 
-/* ============================================================
-   PLAYFUL BITS — counters, cursor tilt, highlighter marks
-   ============================================================ */
 
-/** Numbers count up the first time they scroll into view.
- *  The final value is already in the HTML, so no-JS and reduced-motion
- *  visitors read the right number and only the animation is skipped. */
+/* ============================================================
+   COUNTERS
+   ------------------------------------------------------------
+   Numbers count up the first time they scroll into view. The
+   final value is already in the HTML, so no-JS and reduced-motion
+   visitors read the right number and only the animation is skipped.
+   ============================================================ */
 function initCounters() {
   $$('[data-count-to]').forEach((el) => {
     const to = Number(el.dataset.countTo);
@@ -768,46 +724,5 @@ function initCounters() {
         scrollTrigger: { trigger: el, start: 'top 92%', once: true },
       }
     );
-  });
-}
-
-/** The hero pill leans toward the cursor — the one bit of 3D on the site. */
-function initPillTilt(signal) {
-  if (!finePointer) return;
-  const wrap = $('[data-pill-tilt]');
-  const pill = wrap && $('.hero-pill', wrap);
-  const hero = $('.hero-sec');
-  if (!wrap || !pill || !hero) return;
-
-  const rx = gsap.quickTo(pill, 'rotationX', { duration: 0.8, ease: 'power3' });
-  const ry = gsap.quickTo(pill, 'rotationY', { duration: 0.8, ease: 'power3' });
-  const clamp = (v) => Math.max(-1, Math.min(1, v));
-
-  hero.addEventListener(
-    'pointermove',
-    (e) => {
-      const r = wrap.getBoundingClientRect();
-      rx(clamp((e.clientY - (r.top + r.height / 2)) / (r.height / 2)) * -7);
-      ry(clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 2)) * 9);
-    },
-    { signal }
-  );
-  hero.addEventListener('pointerleave', () => (rx(0), ry(0)), { signal });
-}
-
-/** Highlighter marks sweep in — the hero's after the title reveal,
- *  the rest as they scroll into view. */
-function initHighlights() {
-  $$('.hl').forEach((el, i) => {
-    if (el.closest('.hero-sec')) {
-      gsap.delayedCall(1 + i * 0.14, () => el.classList.add('is-drawn'));
-      return;
-    }
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => el.classList.add('is-drawn'),
-    });
   });
 }

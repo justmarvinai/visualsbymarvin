@@ -1,0 +1,45 @@
+---
+import type { Station } from '../data/experience';
+import { dash } from '../utils/typo';
+
+/**
+ * Experience / education as rows on hairlines:
+ * period · role + company (+ note) · work mode.
+ */
+interface Props {
+  title: string;
+  items: Station[];
+  /** show the longer description under each role */
+  notes?: boolean;
+}
+const { title, items, notes = true } = Astro.props;
+
+/** 'On-site' → 'mode-onsite' */
+const modeClass = (mode: string) => `mode-${mode.toLowerCase().replace(/[^a-z]/g, '')}`;
+---
+
+<div>
+  <h3 class="label pb-3">{title}</h3>
+  <ol>
+    {
+      items.map((s) => (
+        <li
+          class="border-ink/15 grid gap-x-6 gap-y-1.5 border-t py-5 sm:grid-cols-[8.5rem_1fr] sm:py-6 lg:grid-cols-[8.5rem_1fr_auto]"
+          data-reveal
+        >
+          <p class="text-soft num text-sm sm:pt-1">{s.period}</p>
+          <div>
+            <h4 class="text-[1.15rem] leading-snug font-bold tracking-[-0.01em]">{dash(s.role)}</h4>
+            <p class="text-soft mt-0.5 text-[0.95rem]">{s.company}</p>
+            {notes && s.note && <p class="text-ink/75 mt-3 max-w-2xl text-[0.95rem] leading-relaxed">{s.note}</p>}
+          </div>
+          {s.mode && (
+            <p class:list={['mode label mt-2 self-start sm:col-start-2 lg:col-start-3 lg:mt-0 lg:pt-1.5', modeClass(s.mode)]}>
+              {s.mode}
+            </p>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</div>

@@ -1,0 +1,56 @@
+---
+import CvButton from './CvButton.astro';
+import Icon from './Icon.astro';
+import Timeline from './Timeline.astro';
+import { experience, education } from '../data/experience';
+import { focus, tools } from '../data/profile';
+
+/**
+ * PROFILE (home page) — the CV at a glance, for whoever reads the
+ * application: experience, education, focus and tools in one scan.
+ * ✏️ The data lives in src/data/experience.ts and src/data/profile.ts.
+ */
+---
+
+<section id="profile" class="wrap cq mt-32 scroll-mt-20 sm:mt-48">
+  <div class="label flex items-center justify-between gap-4" data-reveal>
+    <span>(02)</span>
+    <span class="text-soft">Experience · Education · Tools</span>
+  </div>
+
+  <h2 class="display title-xl mt-4 sm:mt-6" data-mask>
+    <span class="mask"><span class="mi">Profile<span class="dot">.</span></span></span>
+  </h2>
+
+  <div class="mt-12 grid gap-x-12 gap-y-14 sm:mt-16 lg:grid-cols-12">
+    <aside class="lg:col-span-4" data-reveal>
+      <p class="text-[1.2rem] leading-snug font-semibold tracking-[-0.01em] sm:text-[1.35rem]">
+        Right now, I’m looking for a team where I can learn quickly, take on responsibility early,
+        and continue improving my digital design skills.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+        <CvButton />
+        <a href="/about/" class="go u-link text-[0.95rem]">
+          More about me
+          <Icon name="arrow-right" class="ico" />
+        </a>
+      </div>
+    </aside>
+
+    <div class="space-y-12 lg:col-span-8">
+      <Timeline title="Experience" items={experience} />
+      <Timeline title="Education" items={education} />
+
+      <dl class="border-ink/15 grid gap-x-6 gap-y-8 border-t pt-6 sm:grid-cols-2" data-reveal>
+        <div>
+          <dt class="label">Focus</dt>
+          <dd class="mt-3 text-[1.05rem] leading-relaxed font-semibold">{focus.join(' · ')}</dd>
+        </div>
+        <div>
+          <dt class="label">Tools</dt>
+          <dd class="mt-3 text-[1.05rem] leading-relaxed font-semibold">{tools.join(' · ')}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>

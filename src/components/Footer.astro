@@ -1,29 +1,39 @@
 ---
-import Logo from './Logo.astro';
+import CvButton from './CvButton.astro';
+import Icon from './Icon.astro';
 import { site } from '../data/site';
 
+/**
+ * FOOTER — the one full colour field on the site.
+ * ✏️ EDIT HERE: the closing line. No "let's talk" on purpose: the
+ *    people reading this already have your application in hand.
+ */
 const year = new Date().getFullYear();
 const socials = site.socials.filter((s) => s.url);
 ---
 
-<footer class="bg-panel text-panel-fg relative mt-28 overflow-hidden rounded-t-[28px] sm:mt-40 sm:rounded-t-[44px]">
-  <div class="wrap pt-20 pb-16 text-center sm:pt-28">
-    <h2
-      class="display mt-6 text-[clamp(2.6rem,7vw,5.5rem)] leading-[0.98] tracking-[-0.035em]"
-      data-mask
-    >
-      <span class="mask"><span class="mi">Let's work</span></span>
-      <span class="mask"><span class="mi">better <span class="text-lime">together</span>.</span></span>
+<footer class="foot mt-32 sm:mt-48">
+  <div class="wrap cq pt-14 sm:pt-20">
+    <div class="label flex items-center justify-between gap-4" data-reveal>
+      <span>(End)</span>
+      <span>{site.name}</span>
+    </div>
+
+    <h2 class="display title-xl mt-6 sm:mt-10" data-mask>
+      <span class="mask"><span class="mi">Thanks for</span></span>
+      <span class="mask"><span class="mi">your time.</span></span>
     </h2>
 
-    <div class="mt-10 flex flex-col items-center gap-5 sm:mt-12" data-reveal>
+    <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5 sm:mt-14" data-reveal>
+      <CvButton variant="ink" />
       {
         socials.length > 0 && (
-          <ul class="text-panel-fg/60 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+          <ul class="flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] font-semibold">
             {socials.map((s) => (
               <li>
-                <a class="u-link hover:text-panel-fg transition-colors" href={s.url} target="_blank" rel="noopener noreferrer">
-                  {s.label} ↗
+                <a class="u-link inline-flex items-center gap-1" href={s.url} target="_blank" rel="noopener noreferrer">
+                  {s.label}
+                  <Icon name="arrow-up-right" class="size-3.5" />
                 </a>
               </li>
             ))}
@@ -31,30 +41,20 @@ const socials = site.socials.filter((s) => s.url);
         )
       }
     </div>
-  </div>
 
-  {/* bottom bar — matches the sketch: © | links | Germany */}
-  <div class="border-panel-fg/10 mt-16 border-t">
-    <div
-      class="wrap text-panel-fg/60 flex flex-col items-center justify-between gap-3 py-6 pb-24 text-sm sm:flex-row sm:pb-22"
-    >
-      <p>{site.name} © {year}</p>
-      <p class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-        <a href="/imprint/" class="u-link hover:text-panel-fg transition-colors">Impressum</a>
-        <span aria-hidden="true">–</span>
-        <a href="/privacy/" class="u-link hover:text-panel-fg transition-colors">Datenschutz</a>
-        <span aria-hidden="true">–</span>
-        <a href="/about/" class="u-link hover:text-panel-fg transition-colors">About me</a>
-        <span aria-hidden="true">–</span>
-        <a href="#top" class="u-link hover:text-panel-fg transition-colors" data-scroll-top>Back to top</a>
-      </p>
-      <p class="flex items-center gap-2">
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
-          <path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z" stroke="currentColor" stroke-width="1.5"></path>
-        </svg>
-        {site.location}
-      </p>
+    <hr class="hr mt-16 sm:mt-24" />
+
+    <div class="flex flex-col gap-3 py-6 text-sm font-medium sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name}</p>
+      <nav aria-label="Legal and site">
+        <ul class="flex flex-wrap gap-x-5 gap-y-1">
+          <li><a href="/imprint/" class="u-link">Impressum</a></li>
+          <li><a href="/privacy/" class="u-link">Datenschutz</a></li>
+          <li><a href="/about/" class="u-link">About me</a></li>
+          <li><a href="#top" class="u-link" data-scroll-top>Back to top</a></li>
+        </ul>
+      </nav>
+      <p class="num">{site.location} · <span data-time>--:--</span></p>
     </div>
   </div>
 </footer>

@@ -16,12 +16,18 @@ import { site } from '../data/site';
 ---
 
 <Base title="Impressum" description={`Impressum von ${site.name}.`}>
-  <section class="wrap max-w-2xl pt-32 pb-8 sm:pt-40" lang="de">
-    <h1 class="display hyphens-auto text-[clamp(2.2rem,5.5vw,3.6rem)] tracking-[-0.03em]">
+  <section class="wrap cq pt-5 pb-8 sm:pt-8" lang="de">
+    <div class="label flex items-center justify-between gap-4" data-enter>
+      <span>(Rechtliches)</span>
+      <span class="text-soft">{site.name}</span>
+    </div>
+    <hr class="hr mt-3" data-rule />
+
+    <h1 class="display mt-8 hyphens-auto text-[clamp(2.8rem,9.4cqi,8.5rem)] sm:mt-12">
       <span class="mask"><span class="mi gate-mi">Impressum</span></span>
     </h1>
 
-    <div class="legal mt-10" data-enter>
+    <div class="legal mt-12 max-w-2xl sm:mt-16" data-enter>
       <h2>Angaben gem&auml;&szlig; &sect; 5 DDG</h2>
       <p>
         Marvin Gehlen<br />

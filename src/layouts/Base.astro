@@ -1,11 +1,12 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import TopBar from '../components/TopBar.astro';
-import NavPill from '../components/NavPill.astro';
+import Masthead from '../components/Masthead.astro';
 import Footer from '../components/Footer.astro';
-import Grain from '../components/Grain.astro';
 import { site } from '../data/site';
+// the Latin cut of Archivo — preloaded so the headline never paints in a
+// fallback font first (same file the stylesheet uses, so no double fetch)
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -24,8 +25,9 @@ const ogImage = new URL('/og.jpg', Astro.site ?? Astro.url);
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f1f0ed" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
 
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -55,13 +57,11 @@ const ogImage = new URL('/og.jpg', Astro.site ?? Astro.url);
   </head>
   <body id="top" class="min-h-screen">
     <a class="skip" href="#main">Skip to content</a>
-    <Grain />
-    <TopBar />
+    <Masthead />
     <main id="main">
       <slot />
     </main>
     <Footer />
-    <NavPill />
     <script>
       import '../scripts/app.js';
     </script>

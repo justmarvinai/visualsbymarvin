@@ -2,75 +2,131 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Tools from '../components/Tools.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import CvButton from '../components/CvButton.astro';
+import Icon from '../components/Icon.astro';
+import ProjectPlate from '../components/ProjectPlate.astro';
+import Profile from '../components/Profile.astro';
 import Sidequests from '../components/Sidequests.astro';
-import Logo from '../components/Logo.astro';
 import { site } from '../data/site';
+import { experience, education } from '../data/experience';
+import { degree } from '../data/profile';
 import heroPhoto from '../assets/image_pill_me.png';
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft && data.featured)).sort(
   (a, b) => a.data.order - b.data.order
 );
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// "2024 — 2026", read from the projects' own years
+const years = projects.flatMap((p) => (p.data.year?.match(/\d{4}/g) ?? []).map(Number));
+const span = years.length
+  ? Math.min(...years) === Math.max(...years)
+    ? String(years[0])
+    : `${Math.min(...years)} — ${Math.max(...years)}`
+  : '';
+
+/**
+ * ✏️ EDIT HERE: the facts under the headline — the first thing a
+ *    recruiter scans. They follow src/data/experience.ts on their own.
+ */
+const now = experience[0];
+const school = education[0];
+const facts = [
+  { k: 'Currently', v: now?.role, sub: now?.company.split(',')[0] },
+  { k: 'Education', v: degree, sub: `${school?.company.split(',')[0] ?? ''}` },
+  { k: 'Based in', v: site.location, sub: site.availability },
+].filter((f) => f.v);
 ---
 
 <Base>
   {/* ================= HERO ================= */}
-  <section
-    class="hero-sec relative wrap flex flex-col items-center pt-24 pb-16 text-center sm:pt-28 md:min-h-[38rem] md:pb-8"
-  >
-    {/* the pill stays the centrepiece — it just tilts to the cursor */}
-    <div class="hero-pill-wrap relative" data-pill-tilt>
-      <div class="hero-pill relative w-[min(340px,82vw)] overflow-hidden rounded-full sm:w-[420px]">
-        <Image
-          src={heroPhoto}
-          alt={`Portrait of ${site.name}`}
-          class="hero-pill-img block h-auto w-full"
-          widths={[420, 680, 1024, 1364]}
-          sizes="(min-width: 640px) 420px, 82vw"
-          loading="eager"
-          fetchpriority="high"
-        />
-      </div>
+  <section class="wrap pt-5 sm:pt-8">
+    <div class="label grid grid-cols-2 gap-4 sm:grid-cols-3" data-enter>
+      <span>Portfolio {new Date().getFullYear()}</span>
+      <span class="hidden text-center sm:block">Junior Marketing Designer</span>
+      <span class="num text-right">{site.location} · <span data-time>--:--</span></span>
+    </div>
+    <hr class="hr mt-3" data-rule />
+
+    {/* Same words in the same order on every screen — only the line
+        breaks change (see .hero-title in global.css). */}
+    <div class="cq mt-8 sm:mt-12">
+      <h1 class="hero-title display">
+        <span class="wm"><span class="mi gate-mi">Visuals</span></span>
+        <br class="br-sm" />
+        {/* decorative here, so the heading reads "Visuals that work." —
+            the About page carries the portrait with a proper alt */}
+        <span class="hero-pill" aria-hidden="true">
+          <Image
+            src={heroPhoto}
+            alt=""
+            widths={[360, 560, 820, 1100]}
+            sizes="(min-width: 1440px) 380px, (min-width: 768px) 28vw, 40vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </span>
+        <br class="br-lg" />
+        <span class="wm"><span class="mi gate-mi">that</span></span>
+        <br class="br-sm" />
+        <span class="wm"><span class="mi gate-mi">work<span class="dot">.</span></span></span>
+      </h1>
     </div>
 
-    <h1 class="display mt-8 leading-[1.06] font-bold sm:mt-10">
-      {/* the size lives on .mask, not .mi — .mask's em-based descender
-          padding has to resolve against the headline size, not 16px */}
-      <span class="mask text-[clamp(3.3rem,11vw,6.5rem)] tracking-[-0.04em]">
-        <span class="mi gate-mi block">
-          I'm <span class="hl hl-lime">Marvin</span>
-        </span>
-      </span>
-      <span class="mask text-[clamp(1.7rem,5.5vw,3.3rem)] font-semibold tracking-[-0.03em]">
-        <span class="mi gate-mi block">
-          Your <span class="hl hl-sky">Marketing</span> Designer
-        </span>
-      </span>
-    </h1>
+    <div class="mt-12 grid gap-x-10 gap-y-10 sm:mt-16 lg:grid-cols-12">
+      <div class="lg:col-span-5" data-enter>
+        <p class="max-w-xl text-[1.2rem] leading-snug font-semibold tracking-[-0.01em] sm:text-[1.4rem]">
+          I’m {site.name}, a junior marketing designer from {site.location}. I design digital graphics
+          for Meta, Google, e-mail campaigns and in-house websites.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+          <CvButton />
+          <a href="#work" class="go u-link text-[0.95rem]">
+            See the work
+            <Icon name="arrow-right" class="ico rotate-90" />
+          </a>
+        </div>
+      </div>
 
-    <p class="text-ink/80 mt-7 max-w-md text-[1.05rem] leading-relaxed text-balance sm:text-lg" data-enter>
-      Junior Marketing Designer from {site.location} focused on creating visuals that
-      <span class="hl hl-thick hl-coral font-semibold">work</span>.
-    </p>
-
-    <Tools />
+      {/* phones: label | value rows · wider: three columns on a rule */}
+      <dl class="spec grid gap-x-6 sm:grid-cols-3 sm:gap-y-8 lg:col-span-6 lg:col-start-7" data-enter>
+        {
+          facts.map((f) => (
+            <div class="border-ink grid grid-cols-[7.5rem_1fr] gap-x-4 border-t py-3.5 sm:block sm:py-0 sm:pt-3">
+              <dt class="label pt-0.5 sm:pt-0">{f.k}</dt>
+              <dd class="mt-0 sm:mt-[0.35rem]">
+                {f.v}
+                {f.sub && <span>{f.sub}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
   </section>
 
   {/* ================= SELECTED WORK ================= */}
-  <section id="work" class="wrap mt-20 scroll-mt-24 sm:mt-28">
-    <div class="text-soft flex items-center justify-between text-sm" data-reveal>
-      <p class="text-ink flex items-center gap-2 font-medium">
-        <Logo class="text-lime-ink size-3.5" />
-        Selected Work
-      </p>
-      <p class="tabular-nums">(<span data-count-to={projects.length} data-count-pad="2">{String(projects.length).padStart(2, '0')}</span>)</p>
+  <section id="work" class="wrap cq mt-32 scroll-mt-16 sm:mt-48">
+    <div class="label flex items-center justify-between gap-4" data-reveal>
+      <span>(01)</span>
+      <span class="text-soft num">
+        <span data-count-to={projects.length} data-count-pad="2">{pad(projects.length)}</span>
+        projects{span && ` · ${span}`}
+      </span>
     </div>
 
-    <div class="mt-8 grid gap-y-20 sm:mt-10 sm:gap-y-28">
-      {projects.map((project, index) => <ProjectCard {project} {index} />)}
+    <h2 class="display title-xl mt-4 sm:mt-6" data-mask>
+      <span class="mask"><span class="mi">Selected work<span class="dot">.</span></span></span>
+    </h2>
+
+    <div class="mt-14 grid gap-y-24 sm:mt-20 sm:gap-y-36">
+      {projects.map((project, index) => <ProjectPlate {project} {index} total={projects.length} />)}
     </div>
   </section>
+
+  {/* ================= PROFILE ================= */}
+  <Profile />
 
   {/* ================= SIDEQUESTS ================= */}
   <Sidequests />

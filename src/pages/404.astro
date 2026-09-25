@@ -1,18 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <Base title="404 — Page not found">
-  <section class="wrap flex min-h-[68vh] flex-col items-center justify-center pt-24 text-center">
-    <p class="display text-lime text-[clamp(5rem,20vw,12rem)] leading-none font-bold tracking-[-0.04em]">
-      <span class="mask"><span class="mi gate-mi">404</span></span>
-    </p>
-    <p class="text-ink/75 mt-4 text-lg" data-enter>Nothing to see here — this page doesn't exist.</p>
-    <a href="/" class="btn mt-8" data-enter>
-      Back to home
-      <svg class="arr size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M4 12L12 4M12 4H5.5M12 4v6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </a>
+  <section class="wrap cq pt-5 sm:pt-8">
+    <div class="label flex items-center justify-between gap-4" data-enter>
+      <span>(404)</span>
+      <span class="text-soft">Page not found</span>
+    </div>
+    <hr class="hr mt-3" data-rule />
+
+    <h1 class="display mt-8 text-[clamp(6rem,38cqi,34rem)] leading-[0.82] sm:mt-12">
+      <span class="mask"><span class="mi gate-mi">404<span class="dot">.</span></span></span>
+    </h1>
+
+    <div class="mt-10 flex flex-wrap items-center justify-between gap-6 sm:mt-14" data-enter>
+      <p class="text-[1.2rem] leading-snug font-semibold sm:text-[1.4rem]">This page doesn’t exist — the work does.</p>
+      <a href="/" class="btn">
+        Back to the portfolio
+        <Icon name="arrow-right" class="ico ico-go" />
+      </a>
+    </div>
   </section>
 </Base>

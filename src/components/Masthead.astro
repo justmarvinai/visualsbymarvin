@@ -1,0 +1,104 @@
+---
+import CvButton from './CvButton.astro';
+import { site } from '../data/site';
+
+/**
+ * MASTHEAD — sticky top bar on every page.
+ * Slides away while you scroll down and comes back on the way up
+ * (app.js → initMast), so the work gets the whole screen.
+ */
+const path = Astro.url.pathname;
+const links = [
+  // on a project page you're "in" Work, so it reads as current
+  { label: 'Work', href: '/#work', current: path.startsWith('/work/') ? 'true' : undefined },
+  { label: 'About', href: '/about/', current: path.startsWith('/about') ? 'page' : undefined },
+];
+---
+
+<header class="mast">
+  <div class="wrap flex h-15 items-center justify-between gap-3 sm:h-16">
+    <a
+      href="/"
+      class="wordmark flex shrink-0 items-center gap-2 text-[0.875rem] min-[400px]:gap-2.5 min-[400px]:text-[0.95rem]"
+      aria-label={`${site.name} — home`}
+    >
+      <span class="bg-accent size-2.5 shrink-0 rounded-full" aria-hidden="true"></span>
+      {site.name}
+    </a>
+
+    <div class="flex items-center gap-3 min-[400px]:gap-4 sm:gap-6">
+      <nav aria-label="Main">
+        <ul class="flex items-center gap-3 text-sm font-semibold min-[400px]:gap-4 sm:gap-6">
+          {
+            links.map((l) => (
+              <li>
+                <a href={l.href} class="u-link" aria-current={l.current}>
+                  {l.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      {/* toggles: scroll mode (desktop only — touch scrolling is always
+          native) + light/dark theme */}
+      <div class="ctl flex items-center gap-2">
+        <div class="seg scroll-toggle hidden lg:inline-flex" data-active="smooth" role="group" aria-label="Scroll mode">
+          <button
+            type="button"
+            data-scroll-mode="smooth"
+            aria-pressed="true"
+            aria-label="Smooth scrolling"
+            title="Smooth scrolling"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <button
+            type="button"
+            data-scroll-mode="instant"
+            aria-pressed="false"
+            aria-label="Instant scrolling"
+            title="Instant scrolling"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M13 2 L3 14 h9 l-1 8 l10 -12 h-9 l1 -8 Z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="seg" data-seg="theme" role="group" aria-label="Color theme">
+          <button type="button" data-theme-mode="light" aria-pressed="true" aria-label="Light mode" title="Light mode">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4.2"></circle>
+              <path
+                d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"
+              ></path>
+            </svg>
+          </button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" aria-label="Dark mode" title="Dark mode">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.3 14.2A8.5 8.5 0 0 1 9.8 3.7a8.5 8.5 0 1 0 10.5 10.5Z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <CvButton size="sm" class="hidden md:inline-flex" />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import { cvUrl, cvFileName } from '../data/cv';
+
+/**
+ * "Download CV" — renders nothing until `src/assets/cv.pdf` exists
+ * (see src/data/cv.ts), so no button ever leads to a missing file.
+ */
+interface Props {
+  class?: string;
+  /** accent = orange pill, ink = black pill */
+  variant?: 'accent' | 'ink';
+  size?: 'sm' | 'md';
+  label?: string;
+}
+const { class: className, variant = 'accent', size = 'md', label = 'Download CV' } = Astro.props;
+---
+
+{
+  cvUrl && (
+    <a
+      href={cvUrl}
+      download={cvFileName}
+      class:list={['btn', variant === 'accent' && 'btn-accent', size === 'sm' && 'btn-sm', className]}
+    >
+      {label}
+      <Icon name="download" class="ico ico-dl" />
+    </a>
+  )
+}
